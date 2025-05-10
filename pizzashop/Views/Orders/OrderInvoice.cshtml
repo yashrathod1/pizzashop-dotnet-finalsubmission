@@ -1,0 +1,180 @@
+@model pizzashop_repository.ViewModels.OrderDetailsViewModel
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+        }
+ 
+        .invoice-container {
+            background: #fff;
+            width: 100%; padding: 20px; 
+            margin: auto;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .blue-color {
+            color: #0568A8;
+        }
+
+        .table th {
+            background: #0568A8;
+            color: white;
+            text-align: center;
+        }
+
+        .logo-img {
+            width: 80px;
+            height: 80px;
+        }
+
+        .pizzashop-ogo {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="invoice-container">
+        <div class="d-flex justify-content-center ">
+            <div><img class="logo-img" src="http://localhost:5285/images/logos/pizzashop_logo.png" alt=""></div>
+            <div>
+                <h2 class="h2 pizzashop-ogo blue-color fw-bold">PIZZASHOP</h2>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="blue-color fw-bold">Customer Details</div>
+                <div>Name:@Model.CustomerName</div>
+                <div>Mob:@Model.CustomerPhone</div>
+            </div>
+            <div class="col-md-6 ">
+                <div class="blue-color fw-bold">Order Details</div>
+                <div>Invoice:@Model.InvoiceNo</div>
+                <div>Date:@Model.PlacedOn</div>
+                <div>Section:
+                    @string.Join(", ", Model.OrderTable.Select(t => t.SectionName).Distinct())
+                </div>
+                <div>Table:
+                    @string.Join(", ", Model.OrderTable.Select(t => t.TableName))
+                </div>
+            </div>
+        </div>
+
+        <table class="table mt-2">
+            <tr>
+                <th>Sr.No.</th>
+                <th>Item</th>
+                <th>Quantity</th>
+                <th>Unit Price</th>
+                <th>Total</th>
+            </tr>
+            @for (int i = 0; i < Model.OrderItems.Count; i++)
+            {
+                var item = Model.OrderItems[i];
+
+                <tr>
+                    <td>@(i + 1)</td>
+                    <td>
+                        @item.ItemName
+                        @if (item.ItemModifier != null && item.ItemModifier.Any())
+                        {
+                            <ul class="list-unstyled text-muted">
+                                @foreach (var modifier in item.ItemModifier)
+                                {
+                                    <li> @modifier.Name</li>
+                                }
+                            </ul>
+                        }
+                    </td>
+                    <td>
+                        @item.Quantity
+                        @if (item.ItemModifier != null && item.ItemModifier.Any())
+                        {
+                            <ul class="list-unstyled text-muted">
+                                @foreach (var modifier in item.ItemModifier)
+                                {
+                                    <li>@modifier.Quantity</li>
+                                }
+                            </ul>
+                        }
+                    </td>
+                    <td>
+                        ₹@item.Price
+                        @if (item.ItemModifier != null && item.ItemModifier.Any())
+                        {
+                            <ul class="list-unstyled text-muted">
+                                @foreach (var modifier in item.ItemModifier)
+                                {
+                                    <li>₹@modifier.Price</li>
+                                }
+                            </ul>
+                        }
+                    </td>
+                    <td>
+                        ₹@item.TotalAmount
+                        @if (item.ItemModifier != null && item.ItemModifier.Any())
+                        {
+                            <ul class="list-unstyled text-muted">
+                                @foreach (var modifier in item.ItemModifier)
+                                {
+                                    <li>₹@modifier.TotalAmount</li>
+                                }
+                            </ul>
+                        }
+                    </td>
+                </tr>
+
+            }
+
+        </table>
+
+        <div class="summary">
+            <div class="d-flex justify-content-between">
+                <div>Sub Total</div>
+                <div>@Model.Subtotal</div>
+            </div>
+            @foreach (var tax in Model.OrderTax)
+            {
+                <div class="d-flex justify-content-between">
+                    <div>@tax.TaxName</div>
+                    <div>@tax.TaxAmount</div>
+                </div>
+            }
+            <hr class="blue-color fw-bold">
+
+            <div class="d-flex justify-content-between">
+                <div class="blue-color fw-bold">Total Amount Due:</div>
+                <div class="blue-color fw-bold">@Model.TotalAmount</div>
+            </div>
+
+        </div>
+
+        <div class="mt-4">
+            <div class="blue-color fw-bold">Payment Information</div>
+            <div class="">Payment Method:@Model.PaymentMethod</div>
+        </div>
+
+        <div class="d-flex justify-content-center h5 fw-bold blue-color">THANK YOU!</div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

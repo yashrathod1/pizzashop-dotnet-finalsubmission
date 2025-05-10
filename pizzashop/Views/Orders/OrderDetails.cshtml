@@ -1,0 +1,160 @@
+@model pizzashop_repository.ViewModels.OrderDetailsViewModel
+
+
+
+
+<div class="container mt-2">
+    <div class="d-flex justify-content-between align-items-center">
+        <h2 class="blue-color">Order-Details</h2>
+        <a asp-action="Index" class="btn cancel-btn-color ms-1">Back</a>
+    </div>
+
+    <!-- Order Summary -->
+    <div class="card p-3 mt-1">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <strong>Order Summary</strong>
+                <span class="badge bg-success">@Model.Status</span>
+            </div>
+            <div>
+                <a class="btn btn-primary" asp-action="GenerateOrderDetailsPdf" asp-controller="Orders"
+                    asp-route-id="@Model.OrderId">Export</a>
+            </div>
+        </div>
+        <div><strong>Invoice No.:</strong> #@Model.InvoiceNo</div>
+        <div class="row">
+            <div class="col"><strong>Paid On:</strong>@Model.Paidon</div>
+            <div class="col"><strong>Placed On:</strong> @Model.PlacedOn.ToString("dd-MM-yyyy HH:mm")</div>
+            <div class="col"><strong>Modified On:</strong> @(Model.ModifiedOn?.ToString("dd-MM-yyyy HH:mm") ?? "--")
+            </div>
+            <div class="col"><strong>Order Duration:</strong>@Model.OrderDuration</div>
+        </div>
+    </div>
+
+    <!-- Customer & Table Details -->
+    <div class="row mt-1">
+        <div class="col-md-6">
+            <div class="card p-3 h-100">
+                <strong><img src="~/images/icons/people.svg" alt=""> Customer Details</strong>
+                <div>Name: @Model.CustomerName</div>
+                <div>Phone: @Model.CustomerPhone</div>
+                <div>No. of Persons: @Model.NoOfPerson</div>
+                <div>Email: <a href="mailto:@Model.CustomerEmail" class="text-decoration-none">@Model.CustomerEmail</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card p-3 h-100">
+                <strong><img src="~/images/icons/dinner-table.svg" style="width: 20px; height: 20px;" alt=""> Table
+                    Details</strong>
+                <div>
+                    <strong>Table:</strong>
+                    @string.Join(", ", Model.OrderTable.Select(t => t.TableName))
+                </div>
+
+                <div>
+                    <strong>Section:</strong>
+                    @string.Join(", ", Model.OrderTable.Select(t => t.SectionName).Distinct())
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Order Items Table -->
+    <div class="card p-3 mt-1">
+        <strong>Order Items</strong>
+        <div class="table-responsive">
+            <table class=" text-muted table mt-2">
+                <tr>
+                    <th>Sr.No</th>
+                    <th>Item</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Total Amount</th>
+                </tr>
+                @for (int i = 0; i < Model.OrderItems.Count; i++)
+                {
+                    var item = Model.OrderItems[i];
+                    <tr>
+                        <td>@(i + 1)</td>
+                        <td>
+                            @item.ItemName
+                            @if (item.ItemModifier != null && item.ItemModifier.Any())
+                            {
+                                <ul class="list-unstyled text-muted">
+                                    @foreach (var modifier in item.ItemModifier)
+                                    {
+                                        <li><small>• @modifier.Name</small></li>
+                                    }
+                                </ul>
+                            }
+                        </td>
+                        <td>
+                            @item.Quantity
+                            @if (item.ItemModifier != null && item.ItemModifier.Any())
+                            {
+                                <ul class="list-unstyled text-muted">
+                                    @foreach (var modifier in item.ItemModifier)
+                                    {
+                                        <li><small>@modifier.Quantity</small></li>
+                                    }
+                                </ul>
+                            }
+                        </td>
+                        <td>
+                            ₹@item.Price
+                            @if (item.ItemModifier != null && item.ItemModifier.Any())
+                            {
+                                <ul class="list-unstyled text-muted">
+                                    @foreach (var modifier in item.ItemModifier)
+                                    {
+                                        <li><small>₹@modifier.Price</small></li>
+                                    }
+                                </ul>
+                            }
+                        </td>
+                        <td>
+                            ₹@item.TotalAmount
+                            @if (item.ItemModifier != null && item.ItemModifier.Any())
+                            {
+                                <ul class="list-unstyled text-muted">
+                                    @foreach (var modifier in item.ItemModifier)
+                                    {
+                                        <li><small>₹@modifier.TotalAmount</small></li>
+                                    }
+                                </ul>
+                            }
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+
+
+        <!-- Order Summary -->
+        <div class="row mt-3">
+            <div class="col-md-6 offset-md-6">
+                <table class="table">
+                    <tr>
+                        <td><strong>Subtotal:</strong></td>
+                        <td class="text-end">₹@Model.Subtotal</td>
+                    </tr>
+
+                    @foreach (var tax in Model.OrderTax)
+                    {
+                        <tr>
+                            <td><strong>@tax.TaxName:</strong></td>
+                            <td class="text-end">₹@tax.TaxAmount</td>
+                        </tr>
+                    }
+
+                    <tr class="table-light">
+                        <td><strong>Total:</strong></td>
+                        <td class="text-end fw-bold">₹@Model.TotalAmount</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

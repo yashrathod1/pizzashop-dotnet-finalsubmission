@@ -1,0 +1,61 @@
+@model pizzashop_repository.ViewModels.WaitingTokenViewModel
+
+<div class="offcanvas-body">
+    <div id="waitingListTableModule" class="">
+        @* here waiting list load *@
+    </div>
+    <div class="">
+        <div class="blue-color h5">Customer Details</div>
+        <form id="assignTableCustomer" class="P-2">
+            <input type="hidden" id="customerTokenId">
+            <div class="form-floating mb-3">
+                <input type="email" asp-for="Email" id="customerEmail" class="form-control" placeholder="Email*">
+                <label>Email*</label>
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <input type="text" asp-for="Name" id="customerName" class="form-control" placeholder="Name*">
+                <label>Name*</label>
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <input type="text" asp-for="MobileNo" id="customerMobile" class="form-control"
+                    placeholder="Mobile Number*">
+                <label>Mobile Number*</label>
+                <span asp-validation-for="MobileNo" class="text-danger"></span>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <div class="form-floating mb-3">
+                        <input type="text" asp-for="NoOfPerson" id="totalPerson" class="form-control"
+                            placeholder="No.   of Person(s)*">
+                        <label>No. of Person(s)*</label>
+                        <span asp-validation-for="NoOfPerson" class="text-danger"></span>
+                        <span id="capacityValidationError" class="text-danger"></span>
+                        <!-- Validation error message -->
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-floating">
+                        <select class="form-select" id="customerSectionId" asp-for="SectionId"
+                            aria-label="Floating label select example">
+                            @* @if (Model.SectionList != null && Model.Count > 0)
+                            {
+                            foreach (var option in Model.SectionList)
+                            {
+                            <option value="@option.SectionId">@option.SectionName</option>
+                            }
+                            } *@
+                        </select>
+                        <label>Section*</label>
+                        <span asp-validation-for="SectionId" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex justify-content-end gap-2">
+                <button type="submit" id="assignBtnOffCanvas" class="btn navbar-color text-white">Assign</button>
+                <button type="button" class="btn cancel-btn-color" data-bs-dismiss="offcanvas">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div> 

@@ -1,0 +1,146 @@
+@using pizzashop_repository.Models
+@model pizzashop_repository.ViewModels.UserTableViewModel
+
+
+<div class=" d-flex mt-3  p-3 justify-content-between ">
+    <div class="h2 blue-color"><strong>Profile</strong></div>
+
+</div>
+
+<div class="bg-white user-box ms-4 me-4 p-3 mt-3">
+    <form method="post" enctype="multipart/form-data">
+        <div class="profile-head">
+            <div>
+                <img src="~/images/profile_div_bg.jpg" style="width: 100%; height: 65px;" id="profile-bg" alt="">
+            </div>
+            <div class="avatar d-flex" style="height: 44px;">
+
+                <div>
+                    <img src="@(string.IsNullOrEmpty(Model.ProfileImagePath) ? "/images/Default_pfp.svg.png" : Model.ProfileImagePath)"
+                        style="position: relative; top:-30px; width: 90px; height: 90px; left: 18px; object-fit: cover;"
+                        id="ProfileImagePreview" class=" rounded-circle border" />
+                </div>
+
+                <a><img style="position: absolute; width: 25px; height: 25px;" class="my-4"
+                        src="/images/icons/camera.svg" onclick="OpenFile()"></a>
+
+                <input type="file" asp-for="ProfileImage" accept="image/*" id="FileInput" style="display: none;">
+
+                <div class="ps-4 ms-2 mt-1">
+                    <h3 class="m-0">@Model.Firstname @Model.Lastname</h3>
+                    <p>@Model.Rolename</p>
+                </div>
+                <div class="ms-auto me-2 mt-3">
+                    @* using pizzashop.ViewModels; *@
+                    <p>@Model.Email</p>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="text-center">
+            <div class="row row-cols-2 pt-4 mt-1">
+                <div class="col-lg-6 col-12">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" asp-for="Firstname" value="@Model.Firstname"
+                            id="floatingInput" placeholder="name@example.com">
+                        <label for="First Name">First Name</label>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-12">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" asp-for="Lastname" value="@Model.Lastname"
+                            id="floatingInput" placeholder="name@example.com">
+                        <label for="Last Name">Last Name</label>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-12">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" asp-for="Username" value="@Model.Username"
+                            id="floatingInput" placeholder="name@example.com">
+                        <label for="User Name">User Name</label>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-12">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" asp-for="Phone" value="@Model.Phone" id="floatingInput"
+                            placeholder="name@example.com">
+                        <label for="Phone">Phone</label>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center">
+                <div class="row">
+                    <div class="col-lg-4 col-12  mb-3">
+                        <div class="form-floating ">
+                            <select class="form-select dropdown" asp-for="CountryId" data-selected-id="@Model.CountryId"
+                                id="Country">
+                                <option value="@Model.CountryId"></option>
+                            </select>
+                            <label style="padding: 10px;" for="Country">Country</label>
+                            <span class="text-danger" asp-validation-for="CountryId"></span>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-12  mb-3">
+                        <div class="form-floating dropdown">
+                            <select class="form-select" asp-for="StateId" data-selected-id="@Model.StateId" id="State">
+                                <option value="@Model.StateId"></option>
+                            </select>
+                            <label style="padding: 10px;" for="State">State</label>
+                            <span class="text-danger" asp-validation-for="StateId"></span>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-12 mb-3">
+                        <div class="form-floating dropdown">
+                            <select class="form-select" asp-for="CityId" data-selected-id="@Model.CityId" id="City">
+                                <option value="@Model.CityId"></option>
+                            </select>
+                            <label for="City">City</label>
+                            <span class="text-danger" asp-validation-for="CityId"></span>
+                        </div>
+                    </div>
+                    <div class="col-lg-8 col-12 form-floating">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" asp-for="Address" value="@Model.Address"
+                                id="floatingInput" placeholder="Address">
+                            <label for="floatingInput">Address</label>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-12 form-floating">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" asp-for="Zipcode" value="@Model.Zipcode"
+                                id="floatingInput" placeholder="Zipcode">
+                            <label for="Zipcode">Zipcode</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-1 mb-1 d-flex justify-content-end">
+            <button type="submit" class="btn navbar-color text-white" asp-action="Profile"
+                asp-controller="Dashboard">Update</button>
+            <button type="button" class="btn cancel-btn-color ms-1">Cancel</button>
+        </div>
+    </form>
+
+</div>
+<script src="~/js/getdataview.js"></script>
+<script>
+    function OpenFile() {
+        $("#FileInput").click();
+    }
+
+    $(document).ready(function () {
+        $("#FileInput").on("change", function (event) {
+            var file = event.target.files[0];
+            if (file) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $("#ProfileImagePreview").attr("src", e.target.result);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    });
+</script>

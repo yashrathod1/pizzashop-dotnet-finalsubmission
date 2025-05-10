@@ -1,0 +1,916 @@
+@using pizzashop_repository.ViewModels
+@model pizzashop_repository.ViewModels.MenuItemViewModel
+
+@{
+    ViewData["Title"] = "Menu";
+    var perms = ViewBag.Permissions as RolePermissionViewModel;
+}
+
+<head>
+    <link rel="stylesheet" href="~/css/menu.css">
+</head>
+
+
+<div class=" d-flex mt-3 p-3 ms-2 justify-content-between ">
+    <div class="h2 blue-color"><strong>Menu</strong></div>
+</div>
+
+<div class="bg-white user-box ms-4 me-4 p-1 mt-3 ">
+   <ul class="nav nav-pills custom-tab" id="pills-tab" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="pills-item-tab" data-bs-toggle="pill" data-bs-target="#pills-item"
+            type="button" role="tab" aria-controls="pills-item" aria-selected="true">
+            <div class="d-flex align-items-center">
+                <img src="~/images/icons/list-check.svg" alt="Items Icon" width="16" height="16">
+                <span class="ms-2">Items</span>
+            </div>
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="pills-modifiers-tab" data-bs-toggle="pill" data-bs-target="#pills-modifires"
+            type="button" role="tab" aria-controls="pills-modifiers" aria-selected="false">
+            <div class="d-flex align-items-center">
+                <img src="~/images/icons/ui-checks-grid.svg" alt="Modifiers Icon" width="16" height="16">
+                <span class="ms-2">Modifiers</span>
+            </div>
+        </button>
+    </li>
+</ul>
+
+</div>
+
+<div class="bg-white user-box ms-4 me-4   mt-2 ">
+    <div class="tab-content" id="pills-tabContent">
+        <div class="tab-pane fade show active" id="pills-item" role="tabpanel" aria-labelledby="pills-item-tab">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-2 col-md-4 category-color">
+                        <div class="d-flex-coloum">
+                            <div class="d-flex justify-content-between mt-3">
+                                <div>
+                                    <div class="h5">Category</div>
+                                </div>
+                                <div>
+                                    <div class="ms-1">
+                                        @if (perms?.CanaddEdit == true)
+                                        {
+                                        <button type="button" class="trash-btn fw-bold  blue-color custom-blue-border" data-bs-toggle="modal"
+                                            data-bs-target="#categoryModal">
+                                            <img src="~/images/icons/plus-lg.svg">
+                                        </button>
+                                        }
+                                        <!-- Modal for add Category-->
+                                        <div class="modal fade" id="categoryModal" tabindex="-1"
+                                            aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content">
+                                                    <form method="post" id="addEditCategoryForm">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title g-white" id="exampleModalLabel">Add
+                                                                Category</h5>
+                                                            <button type="button" class="btn-close"
+                                                                data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="form-floating mb-3">
+                                                                <input type="text" class="form-control"
+                                                                    asp-for="Category.Name" id="categoryname"
+                                                                    placeholder="Category Name">
+                                                                <span asp-validation-for="Category.Name"
+                                                                    class="text-danger"></span>
+                                                                <label for="categoryname">Name</label>
+                                                                <input type="hidden" id="editCategoryId">
+                                                            </div>
+                                                            <div class="form-floating">
+                                                                <textarea class="form-control" id="categorydescription"
+                                                                    placeholder="Description"></textarea>
+                                                                <label for="categorydescription">Description</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer d-flex justify-content-center">
+                                                            <button type="submit" id="saveCategoryBtn"
+                                                                class="btn navbar-color text-white">Save</button>
+                                                            <button type="button" class="btn cancel-btn-color ms-1"
+                                                                data-bs-dismiss="modal">Cancel</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-3 category-list" id="categoryContainer">
+                                @* @await Html.PartialAsync("_CategoryListPartial.cshtml"); *@
+                            </div>
+
+
+                            @* delete categories modal *@
+                            <div class="modal fade" id="deleteCategoryModal" tabindex="-1"
+                                aria-labelledby="deleteModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-body text-center">
+                                            <img class="warning-img"
+                                                src="~/images/toppng.com-warning-icon-2400x2400.png" alt="">
+                                            <p>Are you sure you want to delete this category?</p>
+                                        </div>
+                                        <div class="modal-footer d-flex justify-content-center">
+                                            <button type="button" id="confirmDeleteBtnCategory"
+                                                class="btn navbar-color text-white">Yes</button>
+                                            <button type="button" class="btn cancel-btn-color ms-1"
+                                                data-bs-dismiss="modal">No</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            @* delete item modal *@
+                            <div class="modal fade" id="deleteItemModal" tabindex="-1"
+                                aria-labelledby="deleteModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-body text-center">
+                                            <img class="warning-img"
+                                                src="~/images/toppng.com-warning-icon-2400x2400.png" alt="">
+                                            <p>Are you sure you want to delete this item?</p>
+                                            <input type="hidden" id="deleteItemId">
+                                        </div>
+                                        <div class="modal-footer d-flex justify-content-center">
+                                            <button type="button" id="confirmDeleteBtnItem"
+                                                class="btn navbar-color text-white">Yes</button>
+                                            <button type="button" class="btn cancel-btn-color ms-1"
+                                                data-bs-dismiss="modal">No</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @* delete items modal *@
+                            <div class="modal fade" id="deleteItemsModal" tabindex="-1"
+                                aria-labelledby="deleteModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-body text-center">
+                                            <img class="warning-img"
+                                                src="~/images/toppng.com-warning-icon-2400x2400.png" alt="">
+                                            <p>Are you sure you want to delete this items?</p>
+                                            <input type="hidden" id="deleteItemsId">
+                                        </div>
+                                        <div class="modal-footer d-flex justify-content-center">
+                                            <button type="button" id="confirmDeleteBtnItems"
+                                                class="btn navbar-color text-white">Yes</button>
+                                            <button type="button" class="btn cancel-btn-color ms-1"
+                                                data-bs-dismiss="modal">No</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-lg-10 col-md-8">
+                        <div class="h6 mt-2 blue-color">Items</div>
+                        <div class="d-flex justify-content-end">
+                            <div class="form-group has-search">
+                                <span class="fa fa-search form-control-feedback"></span>
+
+                                @* Search term *@
+                                <input type="text" id="searchItems" class="form-control" placeholder="Search">
+                            </div>
+                            @if (perms?.CanaddEdit == true)
+                            {
+                            <div class="ms-4 mt-1"><button id="deleteSelectedBtn" class="menu-deletes-btn p-1"
+                                    ><img src="~/images/icons/trash.svg"
+                                        alt=""></button>
+                            </div>
+                            }      
+                            @if (perms?.CanaddEdit == true)
+                            {
+                            <div class="ms-4"><button type="button" data-bs-toggle="modal"
+                                    data-bs-target="#addMenuItemModal" id="newItemBtn" class="btn menu-new-item-btn text-white">+New
+                                    Item</button></div>
+                            }
+                        </div>
+                        <div>
+                            <div class="table-responsive mt-3">
+                                <div id="itemContainer">
+                                    @* partial load here *@
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+
+        @* modifierGroup *@
+
+        <div class="tab-pane fade" id="pills-modifires" role="tabpanel" aria-labelledby="pills-modifires-tab">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-2 col-md-4 category-color">
+                        <div class="d-flex-coloum">
+                            <div class="d-flex justify-content-between mt-3">
+                                <div>
+                                    <div class="h5">Modifier Groups</div>
+                                </div>
+                                <div>
+                                    <div class="ms-1">
+                                    @if (perms?.CanaddEdit == true)
+                                    {
+                                        <button type="button" class="trash-btn  fw-bold  blue-color custom-blue-border" data-bs-toggle="modal"
+                                            data-bs-target="#addModifierGroup">
+                                           <img src="~/images/icons/plus-lg.svg">
+                                        </button>
+                                    }
+
+                                        @* Add ModifierGroup pop up *@
+                                        <div class="modal fade" id="addModifierGroup" tabindex="-1"
+                                            aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog custom-modal-modifiergroup  modal-dialog-centered">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel">Add Modifier
+                                                            Group</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                            aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form id="addModifierGroupForm">
+                                                            <div class="form-floating mb-3">
+                                                                <input type="text" class="form-control"
+                                                                    id="modifiergroupname" asp-for="ModifierGroups.Name"
+                                                                    placeholder="Name">
+                                                                <label for="modifiergroupname">Name*</label>
+                                                                <span class="text-danger"
+                                                                    asp-validation-for="ModifierGroups.Name"></span>
+                                                            </div>
+                                                            <div class="form-floating mb-3">
+                                                                <textarea class="form-control"
+                                                                    id="modifiergroupdescription" name="Description"
+                                                                    style="height: 90px;"
+                                                                    placeholder="Description"></textarea>
+                                                                <label
+                                                                    for="modifiergroupdescription">Description</label>
+                                                            </div>
+                                                            <!-- Add Existing Modifiers Link -->
+                                                            <div class="mb-3">
+                                                                <a href="#" style="text-decoration: none;"
+                                                                    class="text-primary"
+                                                                    id="openExistingModifierModal">+ Add Existing
+                                                                    Modifiers</a>
+
+                                                            </div>
+
+                                                            <div class="mb-3">
+
+                                                                <div id="selectedModifiersContainer"
+                                                                    class="d-flex flex-wrap">
+                                                                    <!-- Selected modifiers will be added here -->
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="modal-footer d-flex justify-content-end">
+                                                                <button type="submit"
+                                                                    class="btn navbar-color text-white"
+                                                                    id="saveAllModifiers">Save</button>
+                                                                <button type="button" class="btn cancel-btn-color ms-1"
+                                                                    data-bs-dismiss="modal">Cancel</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        @* add Existing modifier *@
+
+                                        <!-- Existing Modifier Selection Modal -->
+                                        <div class="modal fade" id="selectExistingModifierModal" tabindex="-1"
+                                            aria-labelledby="selectModifierLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-lg modal-dialog-centered">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="selectModifierLabel">Select Existing
+                                                            Modifier</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                            aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <input type="text" class="form-control" id="searchAllModifierss"
+                                                            placeholder="Search">
+
+                                                        <table class="table">
+                                                            <div id="ModifersListToAddModiferGroupContainer">
+                                                                @* @await Html.PartialAsync("_ModifierListPartial")
+                                                                *@
+                                                            </div>
+                                                        </table>
+                                                    </div>
+                                                    <div class="modal-footer d-flex justify-content-start">
+                                                        <button id="addModifiersBtn"
+                                                            class="btn navbar-color text-white">Add</button>
+                                                        <button type="button" class="btn cancel-btn-color ms-1"
+                                                            data-bs-dismiss="modal">Cancel</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-3 modifiergroup-list" id="modifierGroupContainer">
+                                @await Html.PartialAsync("_ModifierGroupPartial", Model.ModifierGroup)
+                            </div>
+
+
+                            @* delete ModifierGroup modal *@
+                            <div class="modal fade" id="deleteModifierGroupModal" tabindex="-1"
+                                aria-labelledby="deleteModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-body text-center">
+                                            <img class="warning-img"
+                                                src="~/images/toppng.com-warning-icon-2400x2400.png" alt="">
+                                            <p>Are you sure you want to delete this Modifier?</p>
+                                        </div>
+                                        <div class="modal-footer d-flex justify-content-center">
+                                            <button type="button" id="confirmDeleteBtnModifierGroup"
+                                                class="btn navbar-color text-white">Yes</button>
+                                            <button type="button" class="btn cancel-btn-color ms-1"
+                                                data-bs-dismiss="modal">No</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Edit Modifier Group Modal -->
+                            <div class="modal fade" id="EditModifierGroupModal" tabindex="-1"
+                                aria-labelledby="editModifierLabel" aria-hidden="true">
+                                <div class="modal-dialog custom-modal-modifiergroup modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="editModifierLabel">Edit Modifier Group</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form id="editModifierGroupForm">
+                                                <input type="hidden" id="editModifierGroupId">
+
+                                                <div class="form-floating mb-3">
+                                                    <input type="text" asp-for="ModifierGroups.Name"
+                                                        class="form-control" id="editModifierGroupName"
+                                                        placeholder="Name">
+                                                    <label for="editModifierGroupName">Name*</label>
+                                                    <span class="text-danger"
+                                                        asp-validation-for="ModifierGroups.Name"></span>
+                                                </div>
+                                                <div class="form-floating">
+                                                    <textarea class="form-control" id="editModifierGroupDescription"
+                                                        style="height: 90px;" placeholder="Description"></textarea>
+                                                    <label for="editModifierGroupDescription">Description</label>
+                                                </div>
+                                                <!-- Add Existing Modifiers Link -->
+                                                <div class="mb-3">
+                                                    <a href="#" style="text-decoration: none;" class="text-primary"
+                                                        id="openExistingModifierEditModal">+ Add Existing
+                                                        Modifiers</a>
+
+                                                </div>
+
+                                                <div class="mb-3">
+
+                                                    <div id="selectedEditModifiersContainer" class="d-flex flex-wrap">
+                                                        <!-- Selected modifiers will be added here -->
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer d-flex justify-content-end">
+                                                    <button type="submit"
+                                                        class="btn navbar-color text-white">Save</button>
+                                                    <button type="button" class="btn cancel-btn-color ms-1"
+                                                        data-bs-dismiss="modal">Cancel</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @* add Existing modifier for edit*@
+
+                            <!-- Existing Modifier Selection Modal -->
+                            <div class="modal fade" id="selectExistingModifierForEditModal" tabindex="-1"
+                                aria-labelledby="selectModifierLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-lg modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="selectModifierLabel">Select Existing
+                                                Modifier</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <input type="text" class="form-control" id="searchAllModifierss"
+                                                placeholder="Search">
+
+                                            <table class="table">
+                                                <div id="ModifersListToEditModiferGroupContainer">
+                                                    @* @await Html.PartialAsync("_ModifierListPartial")
+                                                    *@
+                                                </div>
+                                            </table>
+                                        </div>
+                                        <div class="modal-footer d-flex justify-content-start">
+                                            <button id="EditModifiersBtn" class="btn navbar-color text-white">Add</button>
+                                            <button type="button" class="btn cancel-btn-color"
+                                                data-bs-dismiss="modal">Cancel</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-10 col-md-8">
+                        <div class="h6 mt-2 blue-color">Modifiers</div>
+                        <div class="d-flex justify-content-end">
+                            <div class="form-group has-search">
+                                <span class="fa fa-search form-control-feedback"></span>
+                                <input type="text" class="form-control" id="searchModifiers" placeholder="Search">
+                            </div>
+                            @if (perms?.Candelete == true)
+                            {
+                            <div class="ms-4 mt-1"><button id="deleteSelectedBtnForModifier" class="menu-deletes-btn p-1"><img src="~/images/icons/trash.svg"
+                                        alt=""></button>
+                            </div>
+                            }
+                            @if (perms?.CanaddEdit == true)
+                            {
+                            <div class="ms-4"><button type="button" data-bs-toggle="modal"
+                                    data-bs-target="#addModifierModal" class="btn menu-new-item-btn new-modifier text-white">+New
+                                    Modifier</button>
+                            </div>
+                            }
+
+                            @* Add Modifiers *@
+                            <div class="modal fade" id="addModifierModal" tabindex="-1"
+                                aria-labelledby="modifierModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered modal-lg">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="modifierModalLabel">Add New Modifier</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form method="post" id="AddModifierForm">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="dropdown w-100">
+                                                            <button
+                                                                class="btn btn-light form-control text-start dropdown-toggle border"
+                                                                type="button" id="modifierDropdown"
+                                                                style="height: 57px; !important"
+                                                                data-bs-toggle="dropdown" aria-expanded="false">
+                                                                Select Modifier Group(s)
+                                                            </button>
+                                                            @* <ul class="dropdown-menu w-100"
+                                                                aria-labelledby="modifierDropdown">
+                                                                <li>
+                                                                    <label class="dropdown-item">
+                                                                        <input type="checkbox" id="selectAll">
+                                                                        <strong>Select All</strong>
+                                                                    </label>
+                                                                </li>
+                                                                <li>
+                                                                    <hr class="dropdown-divider">
+                                                                </li>
+                                                                @foreach (var modifierGroup in Model.ModifierGroup)
+                                                                {
+                                                                    <li>
+                                                                        <label class="dropdown-item">
+                                                                            <input type="checkbox"  class="modifier-checkbox"
+                                                                                value="@modifierGroup.Id">
+                                                                            @modifierGroup.Name
+                                                                        </label>
+                                                                    </li>
+                                                                }
+                                                            </ul> *@
+                                                            <ul class="dropdown-menu w-100" id="modifierDropdownList" aria-labelledby="modifierDropdown">
+                                                            <!-- Dropdown content will be dynamically loaded here -->
+                                                                 </ul>
+                                                        </div>
+                                                        <input type="hidden" id="ModifierGroupIds"
+                                                            name="ModifierGroupIds">
+                                                        <span class="text-danger" id="ModifierGroupIdsError"></span>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <div class="form-floating mb-3">
+                                                            <input type="text" class="form-control" id="Name1"
+                                                                asp-for="modifier.Name" placeholder="Name">
+                                                            <label for="Name1">Name</label>
+                                                            <span class="text-danger" asp-validation-for="modifier.Name"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row g-3">
+                                                    <div class="col-md-4">
+                                                        <div class="form-floating">
+                                                            <input type="number" class="form-control" id="Rate1"
+                                                                asp-for="modifier.Price" placeholder="Rate">
+                                                            <label for="Rate1">Rate</label>
+                                                            <span class="text-danger" asp-validation-for="modifier.Price"></span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-4">
+                                                        <div class="form-floating">
+                                                            <input type="number" class="form-control" id="Quantity1"
+                                                                asp-for="modifier.Quantity" placeholder="Quantity" value="0">
+                                                            <label for="Quantity1">Quantity</label>
+                                                            <span class="text-danger"
+                                                                asp-validation-for="modifier.Quantity"></span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-4">
+                                                        <div class="form-floating">
+                                                            <select class="form-select" id="Unit1" asp-for="modifier.Unittype"
+                                                                aria-label="Select Unit">
+                                                                <option value="" selected>Select a unit</option>
+                                                                <option value="pcs">pcs</option>
+                                                                <option value="g">g</option>
+                                                            </select>
+                                                            <label for="Unit1">Unit</label>
+                                                            <span class="text-danger"
+                                                                asp-validation-for="modifier.Unittype"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-floating mt-3">
+                                                    <textarea class="form-control" id="Description1"
+                                                        asp-for="modifier.Description" placeholder="Description"></textarea>
+                                                    <label for="Description1">Description</label>
+                                                    <span class="text-danger" asp-validation-for="modifier.Description"></span>
+                                                </div>
+
+                                                <div class="modal-footer">
+                                                    <button type="submit" id="saveModifier"
+                                                        class="btn btn-primary  navbar-color text-white">Save</button>
+                                                    <button type="button" class="btn cancel-btn-color"
+                                                        data-bs-dismiss="modal">Cancel</button>
+                                                </div>
+                                            </form>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        
+
+                            @* EditModifieraModal *@
+
+                            <div class="modal fade" id="EditModifiersModal" tabindex="-1"
+                                aria-labelledby="modifierModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered modal-lg">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="modifierModalLabel">Update Modifier</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form method="post" id="EditModifierForm">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="dropdown w-100">
+                                                            <button
+                                                                class="btn btn-light form-control text-start dropdown-toggle border"
+                                                                type="button" id="modifierDropdownForEdit"
+                                                                style="height: 57px; !important"
+                                                                data-bs-toggle="dropdown" aria-expanded="false">
+                                                                Select Modifier Group(s)
+                                                            </button>
+                                                            <ul class="dropdown-menu w-100" id="modifierDropdownForEditList" aria-labelledby="modifierDropdownForEdit">
+                                                                <!-- Dropdown content will be dynamically loaded here -->
+                                                            </ul>
+                                                            <input type="hidden" id="ModifierGroupIds"
+                                                            name="ModifierGroupIds">
+                                                        <span class="text-danger" id="ModifierGroupIdsError"></span>
+                                                        </div>
+                                                        <!-- Hidden input to store selected values -->
+                                                        <input type="hidden" id="ModifierGroupIds"
+                                                            name="ModifierGroupIds">
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="form-floating mb-3">
+                                                            <input type="text" class="form-control" id="Name2"
+                                                                asp-for="modifier.Name" placeholder="Name">
+                                                            <label for="name">Name</label>
+                                                            <span class="text-danger" asp-validation-for="modifier.Name"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row g-3">
+                                                    <div class="col-md-4">
+                                                        <div class="form-floating">
+                                                            <input type="number" class="form-control" id="Rate2"
+                                                                asp-for="modifier.Price" placeholder="Rate">
+                                                            <label for="rate">Rate</label>
+                                                            <span class="text-danger" asp-validation-for="modifier.Price"></span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="form-floating">
+                                                            <input type="number" class="form-control" id="Quantity2"
+                                                                asp-for="modifier.Quantity" placeholder="Quantity" value="0">
+                                                            <label for="quantity">Quantity</label>
+                                                              <span class="text-danger"
+                                                                asp-validation-for="modifier.Quantity"></span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="form-floating">
+                                                            <select class="form-select" asp-for="modifier.Unittype" id="Unit2" 
+                                                                aria-label="Select Unit">
+                                                                <option value="" selected>Select a unit</option>
+                                                                <option value="pcs">pcs</option>
+                                                                <option value="g">g </option>
+
+                                                            </select>
+                                                            <label for="unit">Unit</label>
+                                                             <span class="text-danger"
+                                                                asp-validation-for="modifier.Unittype"></span>
+                                                        </div>
+                                                    </div>
+
+                                                    <input type="hidden" id="modifierId" name="modifierId">
+                                                    <input type="hidden" id="isDeleted2" name="isDeleted">
+                                                </div>
+                                                <div class="form-floating mt-3">
+                                                    <textarea class="form-control" id="Description2" name="Description"
+                                                        placeholder="Description" value="0"></textarea>
+                                                    <label for="description">Description</label>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="submit" id="saveModifier"
+                                                        class="btn navbar-color text-white">Save</button>
+                                                    <button type="button" class="btn cancel-btn-color"
+                                                        data-bs-dismiss="modal">Cancel</button>
+                                                </div>
+                                            </form>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            @* deleteModifier *@
+
+                            <div class="modal fade" id="deleteModifierModal" tabindex="-1"
+                                aria-labelledby="deleteModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-body text-center">
+                                            <img class="warning-img"
+                                                src="~/images/toppng.com-warning-icon-2400x2400.png" alt="">
+                                            <p>Are you sure you want to delete this Modifier?</p>
+                                            <input type="hidden">
+                                        </div>
+                                        <div class="modal-footer d-flex justify-content-center">
+                                            <button type="button" id="confirmDeleteBtnModifier"
+                                                class="btn navbar-color text-white">Yes</button>
+                                            <button type="button" class="btn cancel-btn-color ms-1"
+                                                data-bs-dismiss="modal">No</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            @* mass modifier delete *@
+
+                            <div class="modal fade" id="deleteModifiersModal" tabindex="-1"
+                                aria-labelledby="deleteModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-body text-center">
+                                            <img class="warning-img"
+                                                src="~/images/toppng.com-warning-icon-2400x2400.png" alt="">
+                                            <p>Are you sure you want to delete this Modifiers?</p>
+                                            <input type="hidden" id="deleteModifiersId">
+                                        </div>
+                                        <div class="modal-footer d-flex justify-content-center">
+                                            <button type="button" id="confirmDeleteBtnModifiers"
+                                                class="btn navbar-color text-white">Yes</button>
+                                            <button type="button" class="btn cancel-btn-color ms-1"
+                                                data-bs-dismiss="modal">No</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                        </div>
+                        <div>
+                            <div class="table-responsive mt-3">
+                                <div id="ModifersListContainer">
+                                    @* @await Html.PartialAsync("_ModifierListPartial") *@
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    @* edit item modal *@
+    <div class="modal fade" id="EditItemModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        @await Html.PartialAsync("_EditModalPartial", Model);
+    </div>
+
+
+    @* New item modal *@
+    <div class="modal fade" id="addMenuItemModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Add New Menu Item</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addMenuItemForm" method="post" enctype="multipart/form-data">
+    <div class="row">
+        <div class="row col-md-8">
+            <!-- Category -->
+            <div class="col-md-6 col-12">
+                @* <label for="Categoryid" class="form-label">Category</label>
+                <select class="form-select" id="Categoryid"  asp-for="item.Categoryid">
+                    <option value="" selected>Select Category</option>
+                    @foreach (var category in Model.Categories)
+                    {
+                        <option value="@category.Id">@category.Name</option>
+                    }
+                </select>
+                <span class="text-danger" asp-validation-for="item.Categoryid"></span> *@
+                <label for="categoryDropdown" class="form-label">Category</label>
+                        <select class="form-select" asp-for="item.Categoryid" id="categoryDropdown">
+                            <option selected value="">Loading categories...</option>
+                        </select>
+                    <span class="text-danger" asp-validation-for="item.Categoryid"></span>
+            </div>
+
+            <!-- Name -->
+            <div class="col-md-6 col-12">
+                <label for="Name" class="form-label">Name</label>
+                <input type="text" class="form-control" id="Name" asp-for="item.Name" />
+                <span class="text-danger" asp-validation-for="item.Name"></span>
+            </div>
+
+            <!-- Item Type -->
+            <div class="col-md-3 mt-3 col-12">
+                <label for="ItemType" class="form-label">Item Type</label>
+                <select class="form-select" id="ItemType" asp-for="item.ItemType">
+                    <option value="">Select a type</option>
+                    <option value="Veg">Veg</option>
+                    <option value="Non-Veg">Non-Veg</option>
+                    <option value="Vegan">Vegan</option>
+                </select>
+                <span class="text-danger" asp-validation-for="item.ItemType"></span>
+            </div>
+
+            <!-- Rate -->
+            <div class="col-md-3 mt-3">
+                <label for="Rate" class="form-label">Rate</label>
+                <input type="number" class="form-control" id="Rate" asp-for="item.Rate" value="0" />
+                <span class="text-danger" asp-validation-for="item.Rate"></span>
+            </div>
+
+            <!-- Quantity -->
+            <div class="col-md-3 mt-3">
+                <label for="Quantity" class="form-label">Quantity</label>
+                <input type="number" class="form-control" id="Quantity" asp-for="item.Quantity" value="0" />
+                <span class="text-danger" asp-validation-for="item.Quantity"></span>
+            </div>
+
+            <!-- Unit -->
+            <div class="col-md-3 mt-3">
+                <label for="Unit" class="form-label">Unit</label>
+                <select class="form-select" id="Unit" asp-for="item.Unit">
+                    <option value="" selected>Select a unit</option>
+                    <option value="Pieces">Pieces</option>
+                    <option value="Grams">Grams</option>
+                </select>
+                <span class="text-danger" asp-validation-for="item.Unit"></span>
+            </div>
+
+            <!-- Availability Toggle -->
+            <div class="col-md-3 mt-3 d-flex text-center align-items-center justify-content-center">
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="IsAvailable" asp-for="item.IsAvailable" value="true" style="width: 55px; height: 25px; margin-top: 8px;">
+                    <input type="hidden" asp-for="item.IsAvailable" value="false">
+                    <label class="form-check-label m-2" for="IsAvailable">Available</label>
+                </div>
+            </div>
+
+            <!-- Default Tax Toggle -->
+            <div class="col-md-3 mt-3 d-flex text-center align-items-center justify-content-center">
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="IsDefaultTax" asp-for="item.IsDefaultTax" value="true" style="width: 55px; height: 25px; margin-top: 8px;">
+                    <input type="hidden" asp-for="item.IsDefaultTax" value="false">
+                    <label class="form-check-label m-2" for="IsDefaultTax">Default Tax</label>
+                </div>
+            </div>
+
+            <!-- Tax Percentage -->
+            <div class="col-md-3 mt-3">
+                <label for="Tax" class="form-label">Tax Percentage</label>
+                <input type="number" class="form-control" id="TaxPercentage" asp-for="item.TaxPercentage" value="" />
+                <span class="text-danger" asp-validation-for="item.TaxPercentage"></span>
+            </div>
+
+            <!-- Short Code -->
+            <div class="col-md-3 mt-3">
+                <label for="ShortCode" class="form-label">Short Code</label>
+                <input type="text" class="form-control" id="ShortCode" asp-for="item.ShortCode" value="" />
+                <span class="text-danger" asp-validation-for="item.ShortCode"></span>
+            </div>
+
+            <!-- Description -->
+            <div class="col-md-12 mt-3">
+                <label for="Description" class="form-label">Description</label>
+                <textarea class="form-control" id="Description" asp-for="item.Description"></textarea>
+                <span class="text-danger" asp-validation-for="item.Description"></span>
+            </div>
+
+            <input type="hidden" id="ItemId" asp-for="item.Id">
+
+            <!-- Upload Image -->
+            <div class="col-md-12 mt-3">
+                <label for="ItemPhoto" class="form-label">Upload Image</label>
+                <div class="border p-3 text-center image-upload-group" style="border: 2px dashed #ccc;">
+                    <input type="file" id="ItemPhoto" asp-for="item.ItemPhoto" class="form-control image-input d-none" />
+                    <label for="ItemPhoto" class="text-primary">Drag and Drop or Browse Files</label>
+                    <p id="imageName1" class="mt-2 text-muted image-name">
+                   
+                    </p> 
+                    <span class="text-dange image-error" id="imageError"></span>
+                </div>
+                <span class="text-danger" asp-validation-for="item.ItemPhoto"></span>
+            </div>
+        </div>
+
+        <div class="col-md-4" style="background-color: #fdf5e6;">
+            <div class="mt-3">
+                <label for="ModifierGroups" class="form-label">Modifier Groups</label>
+                <select class="form-select" id="modifierGroupDropdownForItem" >
+                    <option value="" selected>Select ModifierGroups</option>
+                    @foreach (var modifiergroup in Model.ModifierGroup)
+                    {
+                        <option value="@modifiergroup.Id">@modifiergroup.Name</option>
+                    }
+                </select>
+                
+
+                <!-- Container for dynamically loaded modifier groups -->
+                <div class="modifierContainer" style="max-height: 360px; overflow-y: auto; padding: 5px;"></div>
+            </div>
+        </div>
+    </div>
+</form>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" form="addMenuItemForm" id="saveCategoryBtn" class="btn navbar-color text-white">Save</button>
+                    <button type="button" class="btn cancel-btn-color ms-1"data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="~/js/menuview.js"></script>

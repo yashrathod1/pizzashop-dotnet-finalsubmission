@@ -1,0 +1,216 @@
+/* menu bar */
+
+.menu-tabbar {
+    border: none;
+}
+
+/* .nav-pills .nav-link.active,
+.nav-pills .show>.nav-link {
+    color: #0568a8;
+    background-color: white;
+    text-decoration: underline;
+
+}
+
+.nav-tabs {
+    border-bottom: none;
+}
+
+.nav-tabs .nav-link {
+    border: none;
+    color: #555;
+    font-weight: 500;
+    padding: 8px 16px;
+    text-align: left;
+}
+
+.nav-tabs .nav-link.active {
+    color: #0066a7;
+    background: none;
+}
+
+.nav-link {
+    color: black;
+} */
+
+/* / Custom Tab Styling / */
+.custom-tab .nav-link {
+    border: none;
+    background: transparent;
+    color: #333;
+    font-weight: 500;
+    padding: 8px 16px;
+}
+
+.custom-tab .nav-link.active {
+    color: #0568a8;
+    background-color: transparent;
+    border-bottom: 2px solid #0568a8;
+    border-radius: 0;
+    font-weight: bold;
+}
+
+.custom-tab .nav-link:hover {
+    color: #0568a8;
+}
+
+.nav-pills .nav-link.active,
+.nav-pills .show>.nav-link {
+    background-color: transparent;
+}
+
+.nav-tabs {
+    border-bottom: none;
+}
+
+
+.category-color {
+    background-color: #f8f8f8;
+    border-right: 1px solid #0066a7;
+}
+
+
+
+.menu-new-item-btn {
+    background-color: #0066a7 !important;
+    color: white;
+
+}
+
+.g-white {
+    color: #7e8696;
+}
+
+.custom-switch {
+    width: 50px !important;
+    height: 25px;
+}
+
+.form-check-input:checked {
+    background-color: #0066a7;
+    border-color: #0066a7;
+}
+
+.trash-btn {
+    border: none;
+    background-color: white;
+}
+
+.warning-img {
+    width: 40px;
+    height: 40px;
+
+}
+
+.modal-header {
+    border-bottom: none;
+}
+
+.modal-footer {
+    border-top: none;
+}
+
+.food-icon {
+    width: 20px;
+}
+
+.category-list,
+.modifiergroup-list {
+    height: 300px;
+    overflow: auto;
+}
+
+.sixdot-icon {
+    height: 25px;
+}
+
+ul {
+    list-style: none;
+    padding-left: 0%;
+}
+
+.category-sidebar,
+.modifiergroup-sidebar {
+    text-decoration: none;
+    color: #7e8696;
+    font-weight: bold;
+}
+
+.custom-modal-modifiergroup {
+    max-width: 700px !important;
+}
+
+.modifiergroup-item.selected {
+    color: blue !important;
+    font-weight: bold;
+}
+
+.menu-deletes-btn {
+    background: none;
+    border: 1px solid #7e8696;
+}
+
+.menu-delete-btn {
+    background: none;
+    border: none;
+}
+
+.menu-edit-btn {
+    background: none;
+    border: none;
+}
+
+
+.category-item:hover .category-actions {
+    display: flex !important;
+}
+
+.category-item:hover .category-sidebar {
+    color: #0066a7;
+    font-weight: bold;
+}
+
+.category-actions {
+    display: none;
+}
+
+.category-item {
+    cursor: pointer;
+    padding: 10px;
+}
+
+.category-item.selected .category-sidebar {
+    color: #0066a7;
+    font-weight: bold;
+}
+
+
+/* modifier */
+
+.modifiergroup-item:hover .editdelete-actions {
+    display: flex !important;
+}
+
+.modifiergroup-item:hover .modifiergroup-sidebar {
+    color: #0066a7;
+    font-weight: bold;
+}
+
+.editdelete-actions {
+    display: none;
+}
+
+.modifiergroup-item {
+    cursor: pointer;
+    padding: 10px;
+}
+
+.modifiergroup-item.selected .modifiergroup-sidebar {
+    color: #0066a7;
+    font-weight: bold;
+}
+
+
+/* + icon style */
+
+

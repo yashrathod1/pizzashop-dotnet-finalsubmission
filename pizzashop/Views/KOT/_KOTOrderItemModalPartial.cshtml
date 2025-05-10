@@ -1,0 +1,28 @@
+@model pizzashop_repository.ViewModels.KOTOrderCardViewModel
+
+@foreach (var item in Model.Items)
+{
+    <div class="row align-items-center my-2 order-item-row" data-item-id="@item.ItemId">
+        <div class="col-6">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" checked>
+                <label>@item.ItemName</label>
+                @if (item.Modifiers != null)
+                {
+                    foreach (var mod in item.Modifiers)
+                    {
+                        <div class="ms-4 text-muted small">• @mod</div>
+                    }
+                }
+            </div>
+        </div>
+        <div class="col-6 text-end d-flex justify-content-end">
+            <div class="quantity-box d-flex justify-content-space-between align-items-center p-1"
+                 data-min="1" data-max="@item.Quantity">
+                <button class="quantity-btn quantity-decrease">−</button>
+                <span class="quantity-value">@item.Quantity</span>
+                <button class="quantity-btn quantity-increase">+</button>
+            </div>
+        </div>
+    </div>
+}

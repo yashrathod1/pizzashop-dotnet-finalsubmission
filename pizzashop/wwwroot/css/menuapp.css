@@ -1,0 +1,138 @@
+.category-item.selected {
+    background-color: #0066a7 !important;
+    border-radius: 0 20px 20px 0;
+
+}
+
+.heart-color {
+    color: #0066a7;
+}
+
+.item-card {
+    width: 260px;
+    height: 65px;
+    box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.ribbon-green {
+    width: 0;
+    height: 0;
+    border-top: 30px solid rgb(8, 153, 32);
+    border-left: 30px solid transparent;
+    border-top-right-radius: 8px;
+}
+
+.ribbon-red {
+    width: 0;
+    height: 0;
+    border-top: 30px solid rgb(245, 14, 14);
+    border-left: 30px solid transparent;
+    border-top-right-radius: 8px;
+}
+
+.ribbon-yellow {
+    width: 0;
+    height: 0;
+    border-top: 30px solid rgb(218, 231, 25);
+    border-left: 30px solid transparent;
+    border-top-right-radius: 8px;
+}
+
+.item-image {
+    width: 65px;
+    height: 65px;
+    border-radius: 10px;
+    box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1);
+}
+
+.option-button {
+    min-width: 120px;
+    padding: 10px;
+    text-align: center;
+    border-radius: 0.5rem;
+    border-width: 2px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.option-button.active {
+    background-color: #e9f4ff;
+    border-color: #0d6efd;
+}
+
+.modifier-box {
+    background-color: white;
+    border: 2px solid #ccc;
+    transition: all 0.3s ease;
+    position: relative;
+    border-radius: 10px;
+}
+
+.modifier-box.selected {
+    background-color: #d8ecfb;
+    border-color: #3399ff;
+}
+
+.corner-ribbon-modifier {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 0;
+    height: 0;
+    border-top: 20px solid orange;
+    border-left: 20px solid transparent;
+    border-top-right-radius: 10px;
+}
+
+
+.custom-btn {
+    font-weight: bold;
+    font-size: 16px;
+    padding: 6px 12px;
+    border-radius: 6px;
+    min-width: 40px;
+}
+
+.custom-btn-primary:disabled {
+    background-color: #cccccc;
+    border-color: #cccccc;
+    color: #666666;
+    cursor: not-allowed;
+}
+
+
+.custom-btn-primary {
+    background-color: #0069B4;
+    color: white;
+    border: 2px solid #0069B4;
+}
+
+.custom-btn-outline {
+    background-color: transparent;
+    color: #0069B4;
+    border: 2px solid #0069B4;
+}
+.table-img{
+    background-color: #98ccff;
+    width: 30px;
+    height: 30px;
+}
+
+.icon-btn{
+    color: #0066a7;
+}
+.icon-bg:hover{
+    background-color: #0066a7;
+}
+
+.icon-bg:hover .icon-btn{
+    color: white;
+}
+
+.item-scroll{
+    overflow-y: scroll;
+    height: 100%;
+}
+

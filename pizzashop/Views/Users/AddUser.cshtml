@@ -1,0 +1,167 @@
+@model pizzashop_repository.ViewModels.AddUserViewModel
+@{
+    ViewData["Title"] = "AddUser";
+}
+
+<head>
+    <link rel="stylesheet" href="~/css/usersfield.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
+</head>
+
+<div class=" d-flex mt-2 p-2 justify-content-between ">
+    <div class="h2 blue-color"><strong>Add New User</strong></div>
+    <a class="back-btn btn cancel-btn-color" asp-action="UsersList" asp-controller="Users">
+        <div class="blue-color"> &lt Back</div>
+    </a>
+</div>
+
+<div class="bg-white user-box ms-4 me-4 p-3 mt-1">
+    <form method="post" id="AddUserForm" enctype="multipart/form-data">
+        <div class="">
+            <div class="row">
+                <div class="col-lg-6 col-md-6 mt-3 ">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" asp-for="Firstname" placeholder="First Name">
+                        <label for="First Name">First Name</label>
+                    </div>
+                    <span class="text-danger" asp-validation-for="Firstname"></span>
+                </div>
+                <div class="col-lg-6 col-md-6 mt-3 ">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" asp-for="Lastname" placeholder="Last Name">
+                        <label for="Last Name">Last Name</label>
+                    </div>
+                    <span class="text-danger" asp-validation-for="Lastname"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-md-6 mt-3 ">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" asp-for="Username" placeholder="User Name">
+                        <label for="User Name">User Name</label>
+                    </div>
+                    <span class="text-danger" asp-validation-for="Username"></span>
+                </div>
+                <div class="col-lg-6 col-md-6 mt-3 ">
+                    <div class="form-floating">
+                        <select class="form-select" asp-for="RoleId"
+                            asp-items="@(new SelectList(ViewBag.Roles, "Id", "Rolename"))">
+                            <option value="">Select Role</option>
+                        </select>
+                        <span class="text-danger" asp-validation-for="RoleId"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-md-6 mt-3 ">
+                    <div class="form-floating">
+                        <input type="email" class="form-control" asp-for="Email" placeholder="Email">
+                        <label for="Email">Email</label>
+                    </div>
+                    <span class="text-danger" asp-validation-for="Email"></span>
+                </div>
+                <div class="col-lg-6 col-md-6 mt-3 ">
+                    <div class="form-floating">
+                        <input type="password" class="form-control" asp-for="Password" placeholder="Password"
+                            id="password">
+                        <i class="far fa-eye" id="togglePassword"
+                            style=" cursor: pointer; position: absolute;  right: 48px; margin-top: -37px;"></i>
+                        <label for="password">Password</label>
+                    </div>
+                    <span class="text-danger" asp-validation-for="Password"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col mt-3">
+                    <button class="w-100 btn-upload p-0" type="button" onclick="OpenFile()">
+                        <div class="upload-icon p-0">
+                            <input type="file" asp-for="ProfileImage" accept="image/*" id="FileInput"
+                                class="image-input d-none">
+                            <img class="dashboard-icon ProfileImagePreview" src="~/images/icons/cloud-arrow-up.svg" alt="">
+                            <div class="d-flex justify-content-center">
+                                <div id="addUserImageName" class="mt-2 text-muted user-image-name"></div>
+                                <div id="removeImage" class="remove-image-icon d-none" title="Remove Image">&times;
+                                </div>
+                            </div>
+                            <span class="text-danger image-error" id="imageError"></span>
+                            <div>Browse Files</div>
+                        </div>
+                    </button>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col">
+                    <div class="form-floating">
+                        <select class="form-select dropdown" asp-for="CountryId" id="Country"
+                            placeholder="Select Country">
+                            <option value="">Select Country</option>
+                        </select>
+                        <label style="padding: 10px;" for="Country">Country</label>
+                    </div>
+                    <span class="text-danger" asp-validation-for="CountryId"></span>
+                </div>
+                <div class="col">
+                    <div class="form-floating dropdown">
+                        <select class="form-select" asp-for="StateId" id="State" placeholder="Select State">
+                            <option value="">Select State</option>
+                        </select>
+                        <label style="padding: 10px;" for="State">State</label>
+                    </div>
+                    <span class="text-danger" asp-validation-for="StateId"></span>
+                </div>
+                <div class="col">
+                    <div class="form-floating dropdown">
+                        <select class="form-select" asp-for="CityId" id="City" placeholder="Select City">
+                            <option value="">Select City</option>
+                        </select>
+                        <label style="padding: 10px;" for="City">City</label>
+                    </div>
+                    <span class="text-danger" asp-validation-for="CityId"></span>
+                </div>
+            </div>
+
+            <div class="row mt-3">
+                <div class="col">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" asp-for="Zipcode" placeholder="Zipcode">
+                        <label for="Zipcode">Zipcode</label>
+                    </div>
+                    <span class="text-danger" asp-validation-for="Zipcode"></span>
+                </div>
+                <div class="col">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" asp-for="Address" placeholder="Address">
+                        <label for="Address">Address</label>
+                    </div>
+                    <span class="text-danger" asp-validation-for="Address"></span>
+                </div>
+                <div class="col">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" asp-for="Phone" placeholder="Phone">
+                        <label for="Phone">Phone</label>
+                    </div>
+                    <span class="text-danger" asp-validation-for="Phone"></span>
+                </div>
+            </div>
+
+            <input type="hidden" asp-for="Createdby" value="">
+
+            <div class="mt-3 ">
+                <button type="submit" class="btn navbar-color text-white">Create User</button>
+                <a type="button" class="btn cancel-btn-color ms-1" asp-action="UsersList"
+                    asp-controller="Users">Cancel</a>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+<script src="~/js/getdataview.js"></script>
+<script>
+    function OpenFile() {
+
+        const FileInput = document.getElementById("FileInput");
+        FileInput.click();
+    }
+</script>

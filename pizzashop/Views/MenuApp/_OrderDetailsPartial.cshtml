@@ -1,0 +1,151 @@
+@model pizzashop_repository.ViewModels.MenuAppOrderDetailsViewModel
+
+@{
+    int i = 0;
+}
+
+<div class="table-responsive">
+    <table class="table table-borderless">
+        <thead>
+            <tr>
+                <th style="width: 400px;">Items</th>
+                <th style="width: 100px;">Quantity</th>
+                <th style="width: 100px;">Amount</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody id="orderedItemsList">
+            @foreach (var item in Model.Items)
+            {
+                @if (item != null)
+                {
+                    string collapseId = $"collapse_{item.Id}_{i}";
+
+                    <tr class="text-nowrap order-row border" data-item-id="@item.Id" data-available-qty="@item.ItemQuantity"
+                        data-modifier-ids="@string.Join(",", item.SelectedModifiers.Select(m => m.Id))"
+                        data-modifier-names="@string.Join(",", item.SelectedModifiers.Select(m => m.Name))">
+                        <td class="order-item-detail">
+                            <div aria-expanded="true" aria-controls="@collapseId">
+                                <i class="fa-solid fa-chevron-down" data-bs-toggle="collapse" data-bs-target="#@collapseId"
+                                    style="color: #ccced1;"></i>
+
+                                <span class="fw-bold text-dark item-name" data-bs-toggle="modal"
+                                    data-bs-target="#SpecialInstruction" data-iname="@item.ItemName">
+                                    @item.ItemName
+                                </span>
+                            </div>
+
+                            <div id="@collapseId" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+                                    <ul class="mb-0">
+                                        @foreach (var mod in item.SelectedModifiers)
+                                        {
+                                            <li>
+                                                <div class="d-flex justify-content-between modifier-info" data-modifier-id="@mod.Id"
+                                                    data-modifier-qty="@mod.Quantity">
+                                                    <div class="modifier-name" data-mname="@mod.Name">@mod.Name</div>
+                                                    <div class="modifier-amount" data-mamount="@mod.Amount">₹@mod.Amount</div>
+                                                </div>
+                                            </li>
+                                        }
+                                    </ul>
+                                </div>
+                            </div>
+                        </td>
+
+                        <td class="text-center align-middle">
+                            <div style="width: 100px; height: 40px"
+                                class="count border border-secondary d-flex justify-content-between align-items-center px-2 rounded">
+                                <div class="cursor-pointer negative" style="cursor: pointer;">−</div>
+                                <div class="value quantity-input">1</div>
+                                <div class="cursor-pointer positive" style="cursor: pointer;">+</div>
+                            </div>
+                        </td>
+
+                        <td class="text-center align-middle">
+                            <div class="d-flex flex-column">
+                                <span class="fs-4 text-dark item-amount"
+                                    data-base-amount="@item.ItemAmount">₹@item.ItemAmount</span>
+                                <span class="text-secondary fs-6 totalmodifier-amount"
+                                    data-base-amount="@item.TotalModifierAmount">₹@item.TotalModifierAmount</span>
+                            </div>
+                        </td>
+
+                        <td class="text-center align-middle">
+                            <i class="align-self-center fa-regular fa-trash-can h-100 cursor-pointer delete-item"></i>
+                        </td>
+                    </tr>
+
+                    i++;
+                }
+                else
+                {
+                    <div>No Item Found</div>
+                }
+            }
+
+        </tbody>
+    </table>
+</div>
+
+<hr>
+
+<div class="d-flex flex-column" id="tax-summary">
+    <!-- Subtotal -->
+    <div class="d-flex justify-content-between">
+        <span class="fw-bold text-secondary fs-6">SubTotal</span>
+        <span class="fw-bold text-secondary fs-6" id="sub-total">₹@Model.Subtotal.ToString("0.00")</span>
+    </div>
+
+    <!-- Tax List -->
+    @foreach (var tax in Model.Taxes)
+    {
+        decimal taxAmount = tax.Type == "Flat Amount"
+        ? tax.Value
+        : (Model.Subtotal * tax.Value) / 100;
+
+        <div class="d-flex justify-content-between tax-row align-items-center mb-1" data-tax-name="@tax.Name"
+            data-tax-id="@tax.TaxId">
+            @if (tax.IsEnable)
+            {
+                <div>
+                    <label>@tax.Name (@(tax.Type == "Flat Amount" ? $"₹{tax.Value}" : $"{tax.Value}%"))</label>
+                </div>
+
+                <span class="tax-amount" data-rate="@tax.Value" data-type="@tax.Type">
+                    ₹@((taxAmount).ToString("F2"))
+                </span>
+            }
+        </div>
+    }
+    <!-- Grand Total -->
+    <div class="d-flex justify-content-between  mt-2 border-top pt-2">
+        <span>Total</span>
+        <span id="grand-total">@Model.Total.ToString("0.00")</span>
+    </div>
+
+    <div class="d-flex justify-content-between">
+        <span>Payment Method</span>
+        <div class="d-flex gap-2">
+            <input type="radio" name="paymentMethod" id="Cash" value="Cash" @(Model.PaymentMethod == "Cash" ? "checked" :
+                "") />
+            <label class="text-secondary" for="Cash">Cash</label>
+            <input type="radio" name="paymentMethod" id="Card" value="Card" @(Model.PaymentMethod == "Card" ? "checked" :
+                "") />
+            <label class="text-secondary" for="Card">Card</label>
+            <input type="radio" name="paymentMethod" id="UPI" value="UPI" @(Model.PaymentMethod == "UPI" ? "checked"
+                : "") />
+            <label class="text-secondary" for="UPI">UPI</label>
+        </div>
+    </div>
+
+
+</div>
+
+
+<!-- Total Tax -->
+@* <div class="d-flex justify-content-between mt-2">
+<span class="fw-bold">Tax Total</span>
+<span id="tax-total" class="fw-bold"></span>
+</div> *@
+

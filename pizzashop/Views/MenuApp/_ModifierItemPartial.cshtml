@@ -1,0 +1,55 @@
+@using pizzashop_repository.ViewModels
+@model MenuAppModifierDetailViewModel
+<div class="modal-header">
+    <h1 class="modal-title fs-5" id="itemTitle" data-available-qty="@Model.ItemQuantity" data-item-id="@Model.ItemId">
+       <strong> @Model.ItemName</strong>
+    </h1>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+
+<div class="modal-body">
+    @if (Model.ModifierGroups != null && Model.ModifierGroups.Count > 0)
+    {
+        foreach (var modifierGroup in Model.ModifierGroups)
+        {
+            <div class="mb-3" data-min-quantity="@modifierGroup.MinQuantity"
+            
+             data-max-quantity="@modifierGroup.MaxQuantity" data-modifier-group-id="@modifierGroup.ModifierGroupId">
+                <h5 class="fw-bold text-muted mb-1">
+                    @modifierGroup.ModifierGroupName
+                    <small class="fw-normal text-muted ms-1">
+                        (You can choose Minimum - @modifierGroup.MinQuantity & Maximum - @modifierGroup.MaxQuantity options)
+                    </small>
+                </h5>
+
+                <div class="d-flex gap-2 flex-wrap mt-3">
+                    @if (modifierGroup.Modifiers != null && modifierGroup.Modifiers.Count > 0)
+                    {
+                        foreach (var modifier in modifierGroup.Modifiers)
+                        {
+                            <div class="modifier-box p-2 position-relative" style="width: 170px; cursor: pointer;"
+                                data-modifier-id="@modifier.Id"
+                                data-modifier-qty="@modifier.Quantity"
+                                data-modifier-name="@modifier.Name">
+                                <div class="d-flex flex-column">
+                                    <span class="fw-semibold">@modifier.Name</span>
+                                    <span class="text-muted">₹@modifier.Amount</span>
+                                </div>
+                                <div class="corner-ribbon-modifier"></div>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="text-center w-100">No modifiers for current Item</div>
+    }
+</div>
+
+<div class="modal-footer">
+    <button type="button" id="AddToOrder" class="custom-btn custom-btn-primary">Add</button>
+    <button type="button" class="custom-btn custom-btn-outline" data-bs-dismiss="modal">Close</button>
+</div>

@@ -1,0 +1,161 @@
+@model pizzashop_repository.ViewModels.TablesOrderAppViewModel;
+
+@{
+    Layout = "~/Views/Shared/_Layout_OrderApp.cshtml";
+}
+
+<head>
+    <link rel="stylesheet" href="~/css/table.css">
+</head>
+
+<div class="container-fluid p-4">
+    <div class="row justify-content-between align-items-center mb-3">
+        <div class="col-12 col-md-6 mb-2 mb-md-0">
+            <div class="h4 blue-color text-center text-md-start"><strong>Table View</strong></div>
+        </div>
+        <div class="col-12 col-md-6">
+            <ul class="list-inline d-flex flex-wrap justify-content-center justify-content-md-end mb-0">
+                <li class="list-inline-item me-3">
+                    <span class="d-inline-block rounded-circle me-1 dot-available dot-size"></span>
+                    Available
+                </li>
+                <li class="list-inline-item me-3">
+                    <span class="d-inline-block rounded-circle me-1 dot-selected dot-size"></span>
+                    Selected
+                </li>
+                <li class="list-inline-item me-3">
+                    <span class="d-inline-block rounded-circle me-1 dot-green dot-size"></span>
+                    Assigned
+                </li>
+                <li class="list-inline-item">
+                    <span class="d-inline-block rounded-circle me-1 dot-blue dot-size"></span>
+                    Running
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    @foreach (var sections in Model.Sections)
+    {
+        var collapseId = "collapse_" + sections.Id;
+        var chevronId = "chevron_" + sections.Id;
+
+        <div class="bg-white mt-3">
+            <div class="row p-3 align-items-center">
+                <div class="col-12 col-md-6 d-flex align-items-center mb-md-0">
+                    <div class="d-flex justify-content-center me-2 btn"
+                        style="border: 2px solid #e6e5e3; border-radius: 50%; width: 30px; height: 30px;"
+                        data-bs-toggle="collapse" data-bs-target="#@collapseId">
+                        <img id="@chevronId" src="~/images/icons/chevron-right.svg" alt="Next">
+                    </div>
+                    <div class="h4 blue-color mb-0">@sections.Name</div>
+                </div>
+                <div class="col-12 col-md-6">
+                    <div class="d-flex flex-column flex-sm-row justify-content-sm-end align-items-center">
+                        <ul class="list-inline mb-2 me-2">
+                            <li class="list-inline-item me-2">
+                                <span class="d-inline-block rounded-circle me-1 dot-available dot-size"></span>
+                                @sections.AvailableCount
+                            </li>
+                            <li class="list-inline-item me-2">
+                                <span class="d-inline-block rounded-circle me-1 dot-green dot-size"></span>
+                                @sections.AssignedCount
+                            </li>
+                            <li class="list-inline-item">
+                                <span class="d-inline-block rounded-circle me-1 dot-blue dot-size"></span>
+                                @sections.OccupiedCount
+                            </li>
+                        </ul>
+                        <button class="btn wait-token-btn" data-bs-target="#WaitingToken" data-bs-toggle="modal"
+                            data-section-id="@sections.Id">+ Waiting Token</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="@collapseId" class="accordion-collapse collapse bg-white" aria-labelledby="headingGround">
+            <div class="accordion-body">
+                <div class="sections-table">
+                    <div class="row g-3">
+                        @if (Model.Tables != null && Model.Tables.Any(t => t.SectionId == sections.Id))
+                        {
+                            foreach (var table in Model.Tables.Where(t => t.SectionId == sections.Id))
+                            {
+                               
+                                var startTime = (table.Status == "Available" || table.OrderTableTime == null)
+                                ? ""
+                                : table.OrderTableTime?.ToString("yyyy-MM-ddTHH:mm:ss");
+
+
+                                var statusClass = table.Status switch
+                                {
+                                    "Occupied" => "bg-running",
+                                    "Assigned" => "bg-assigned",
+                                    "Available" => "bg-available",
+                                    _ => ""
+                                };
+
+                                var nameColorClass = table.Status switch
+                                {
+                                    "Occupied" => "text-blue",
+                                    "Assigned" => "text-green",
+                                    _ => ""
+                                };
+
+                                <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2">
+                                    <div class="task-card @statusClass p-2" data-table-id="@table.Id" data-section-id="@sections.Id"
+                                        data-status="@table.Status">
+                                        <div class="d-flex justify-content-between p-2">
+                                            <div class="task-title @nameColorClass">@table.Name</div>
+                                            @if (table.Status == "Occupied")
+                                            {
+                                                <div>₹ @table.TotalAmount</div>
+                                            }
+
+                                        </div>
+                                        <div class="d-flex justify-content-between">
+                                            <div class="p-2">
+                                                <div><img class="dashboard-icon" src="~/images/icons/people.svg" alt=""></div>
+                                                <div>@table.Capacity</div>
+                                            </div>
+                                            <div class="p-2">
+                                                <div class="text-center">
+                                                    <img class="dashboard-icon" src="~/images/icons/stopwatch.svg" alt="">
+                                                </div>
+                                                <div class="text-center live-timer" style="width: 120px;" data-starttime="@startTime"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <div class="text-center text-muted">No table available for this section</div>
+                        }
+                    </div>
+
+                </div>
+
+                <div class="d-flex justify-content-end">
+                    <button type="button" class="btn assign-btn text-white mt-3" id="customerAssignbtn" data-section-id="@sections.Id" data-bs-toggle="offcanvas"
+                        data-bs-target="#AssignTable" disabled>Assign</button>
+                </div>
+            </div>
+        </div>
+    }
+
+    @* Waiting token model *@
+    <!-- Modal -->
+    <div class="modal fade" id="WaitingToken" tabindex="-1">
+        @await Html.PartialAsync("_WaitingTokenPartial", Model.WaitingTokens);
+    </div>
+
+
+    @* off canvas *@
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="AssignTable" aria-labelledby="offcanvasRightLabel"  data-bs-scroll="true" data-bs-backdrop="false">
+        @await Html.PartialAsync("_CustomerAssignPartial", Model.WaitingTokens);
+    </div>
+
+
+    <script src="~/js/tables.js"></script>

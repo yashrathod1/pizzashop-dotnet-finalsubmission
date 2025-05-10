@@ -1,0 +1,156 @@
+.nav-tabs {
+    border-bottom: none;
+}
+
+.nav-tabs .nav-link {
+    border: none;
+    color: #555;
+    font-weight: 500;
+    padding: 8px 16px;
+    text-align: left;
+}
+
+.nav-tabs .nav-link.active {
+    color: #0066a7;
+    background: none;
+}
+
+@media (min-width: 576px) {
+    .nav-tabs .nav-link.active {
+        border-bottom: 3px solid #0066a7;
+
+    }
+}
+
+@media (max-width: 575.98px) {
+    .nav-tabs .nav-link.active {
+        border-left: 3px solid #0066a7;
+    }
+}
+
+.shadow-box {
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.12), 0 1px 4px rgba(0, 0, 0, 0.24);
+}
+
+.status-btn {
+    border: 1px solid #0066a7;
+    color: #0066a7;
+    background-color: transparent;
+    transition: 0.3s;
+}
+
+.status-btn:hover,
+.status-btn:focus {
+    background-color: #0066a7;
+    color: #fff;
+}
+
+.status-btn.active {
+    background-color: #0066a7;
+    color: #fff;
+}
+
+.app-default-btn {
+    background-color: #0066a7;
+    color: #fff;
+}
+
+.app-default-btn:hover {
+    background-color: #0066a7;
+    color: #fff;
+}
+
+.app-cancel-btn {
+    border: 1px solid #0066a7;
+    color: #0066a7;
+    background-color: transparent;
+}
+.app-cancel-btn:hover {
+    border: 1px solid #0066a7;
+    color: #0066a7;
+    background-color: transparent;
+}
+
+.quantity-box {
+    border: 1px solid #0066a7;
+    border-radius: 2px;
+    width: 120px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.quantity-btn {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.order-card {
+    min-width: 280px;
+    height: 310px;
+    border: rgb(194, 194, 194) 2px dashed;
+    cursor: pointer;
+}
+
+.order-card:hover {
+    background-color: #f0f0f0;
+}
+
+.prevBtn,
+.nextBtn {
+    border: 1px solid #0066a7;
+}
+
+.kot-time {
+    display: inline-block;
+    width: 160px !important;
+    text-align: center;
+}
+
+.card-header {
+    background-color: #f0ecea;
+    height: 80px;
+}
+
+.card-body {
+    height: 203px;
+}
+
+.card-footer {
+    height: 80px;
+    background-color: #f0ecea;
+}
+
+.tabs-wrapper {
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+@media (max-width: 576px) {
+    .tabs-wrapper {
+        max-height: 300px;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+}
+
+@media (min-width: 577px) {
+    .tabs-wrapper {
+        white-space: nowrap;
+    }
+
+    .tabs-wrapper .nav-tabs {
+        flex-wrap: nowrap;
+    }
+}
+
+/* waiting-list */
+
+.btn-bg-remove
+{
+    background: none;
+    border: none;
+}

@@ -1,0 +1,27 @@
+@using pizzashop_repository.ViewModels
+@model List<KOTOrderCardViewModel>
+
+<div class="w-100 overflow-hidden">
+    @if (Model == null || !Model.Any())
+    {
+        <div class="text-center text-muted my-3">
+            @if (!string.IsNullOrEmpty(ViewBag.noOrderMessage))
+            {
+                <p>@ViewBag.noOrderMessage</p>
+            }
+            else
+            {
+                <p>No Orders Available For This Category</p>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="d-flex gap-2 sliderContainer mt-3" style="transition: transform 0.5s ease-in-out;">
+            @foreach (var item in Model)
+            {
+                <partial name="_OrderCardPartial" model="item" />
+            }
+        </div>
+    }
+</div>

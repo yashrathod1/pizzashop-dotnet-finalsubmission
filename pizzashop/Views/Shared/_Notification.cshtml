@@ -1,0 +1,37 @@
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script type="text/javascript">
+    // Set Toastr options globally
+    toastr.options = {
+        "closeButton": true, // Show close button
+        "debug": false,
+        "newestOnTop": true,
+        "progressBar": true,
+        "positionClass": "toast-top-right", // Position of toast
+        "preventDuplicates": true,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "5000", // Toast will disappear after 5 seconds
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    };
+
+    // Display the toast message
+    @if (TempData["error"] != null)
+    {
+        <text>
+            toastr.error('@TempData["error"]');
+        </text>
+    }
+
+    @if (TempData["success"] != null)
+    {
+        <text>
+            toastr.success('@TempData["success"]');
+        </text>
+    }
+</script>

@@ -1,0 +1,73 @@
+.wait-token-btn {
+    color: #0066a7;
+    border-color: #0066a7;
+}
+
+.task-card {
+    height: 150px;
+    cursor: pointer;
+}
+
+.bg-running {
+    background-color: #e0f2ff;
+    border: 3px solid #c7e1f3;
+}
+
+.bg-assigned {
+    background-color: #f2faec;
+    border: 3px solid #cce9b2;
+}
+
+.bg-selected {
+    background-color: #fafafa !important;
+    border: 3px solid #c2e3a5 !important;
+}
+
+.task-title {
+    font-weight: bold;
+    font-size: 1.25rem;
+}
+
+.bg-available {
+    background-color: #fafafa;
+    border: 3px solid #f0f0f0;
+}
+
+.text-blue {
+    color: #2196f3;
+}
+
+.text-green {
+    color: #4caf50;
+}
+
+.dot-size {
+    width: 10px;
+    height: 10px;
+}
+
+.dot-green {
+    background-color: #7fc83c;
+}
+
+.dot-blue {
+    background-color: #77b4e0;
+}
+
+.dot-selected {
+    border: 2px solid #a4d576;
+}
+
+.dot-available {
+    background-color: #d2cec6;
+}
+
+.assign-btn {
+    background-color: #0066a7;
+    color: #fff;
+}
+
+.rotate-down {
+    transform: rotate(90deg);
+    transition: transform 0.3s ease;
+}

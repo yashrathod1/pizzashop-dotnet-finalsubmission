@@ -1,0 +1,47 @@
+@model pizzashop_repository.ViewModels.MenuAppCustomerViewModel
+
+<div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h1 class="modal-title fs-5" id="staticBackdropLabel">Customer Details</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form id="OrderCustomerDetailsForm">
+            <div class="modal-body">
+                <input type="hidden" asp-for="Id" id="customerId">
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" asp-for="Name" id="orderCustomerName"
+                        placeholder="Name*"><label for="floatingInput">Name*</label>
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="row">
+                    <div class="col-12 col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" asp-for="MobileNo" id="orderCustomerMobileNo"
+                                placeholder="Mobile Number*">
+                            <label for="floatingInput">Mobile Number*</label>
+                            <span asp-validation-for="MobileNo" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="orderCustomerNoOfPerson" asp-for="NoOfPerson"
+                                placeholder="No.of Person(s)*">
+                            <label for="floatingInput">No.of Person(s)*</label>
+                            <span asp-validation-for="NoOfPerson" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="email" class="form-control" id="orderCustomerEmail" asp-for="Email"
+                        placeholder="Email*"> <label for="floatingInput">Email</label>
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="editOrderCustomer" class="btn navbar-color text-white">Save</button>
+                <button type="button" class="btn cancel-btn-color" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>

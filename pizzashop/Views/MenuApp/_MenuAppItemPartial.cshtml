@@ -1,0 +1,68 @@
+@model pizzashop_repository.ViewModels.MenuAppAddOrderItemViewModel
+@{
+    int i = 0;
+}
+@foreach (var item in Model.Items)
+{
+    @if (item != null)
+    {
+        string collapseId = $"collapse_{item.Id}_{i}";
+
+        <tr class="text-nowrap order-row" data-item-id="@item.Id" data-is-temporary="true" data-available-qty="@item.ItemQuantity"
+            data-modifier-ids="@string.Join(",", item.SelectedModifiers.Select(m => m.Id))"
+            data-modifier-names="@string.Join(",", item.SelectedModifiers.Select(m => m.Name))">
+            <td class="z-1">
+                <div aria-expanded="true" aria-controls="@collapseId">
+                    <i class="fa-solid fa-chevron-down" data-bs-toggle="collapse" data-bs-target="#@collapseId"
+                        style="color: #ccced1;"></i>
+
+                    <span class="fw-bold text-dark item-name" data-bs-toggle="modal" data-bs-target="#SpecialInstruction"
+                        data-iname="@item.ItemName">
+                        @item.ItemName
+                    </span>
+                </div>
+
+                <div id="@collapseId" class="accordion-collapse collapse">
+                    <div class="accordion-body">
+                        <ul class="mb-0">
+                            @foreach (var mod in item.SelectedModifiers)
+                            {
+                                <li>
+                                    <div class="d-flex justify-content-between modifier-info" data-modifier-id="@mod.Id"
+                                        data-modifier-qty="@mod.Quantity">
+                                        <div class="modifier-name" data-mname="@mod.Name">@mod.Name</div>
+                                        <div class="modifier-amount" data-mamount="@mod.Amount">₹@mod.Amount</div>
+                                    </div>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </td>
+
+            <td class="text-center align-middle">
+                <div style="width: 100px; height: 40px"
+                    class="count border border-secondary d-flex justify-content-between align-items-center px-2 rounded">
+                    <div class="cursor-pointer negative" style="cursor: pointer;">−</div>
+                    <div class="value quantity-input">1</div>
+                    <div class="cursor-pointer positive" style="cursor: pointer;">+</div>
+                </div>
+            </td>
+
+            <td class="text-center align-middle">
+                <div class="d-flex flex-column">
+                    <span class="fs-4 text-dark item-amount" data-base-amount="@item.ItemAmount">₹@item.ItemAmount</span>
+                    <span class="text-secondary fs-6 totalmodifier-amount"
+                        data-base-amount="@item.TotalModifierAmount">₹@item.TotalModifierAmount</span>
+                </div>
+            </td>
+
+            <td class="text-center align-middle">
+                <i class="align-self-center fa-regular fa-trash-can h-100 cursor-pointer delete-item"></i>
+            </td>
+        </tr>
+
+        i++;
+    }
+   
+}

@@ -1,0 +1,42 @@
+@using pizzashop_repository.ViewModels;
+@model List<MenuAppItemViewModel>
+
+<div class="row align-items-stretch g-3 my-2">
+    <div class="d-flex flex-wrap  gap-3">
+        @if (Model != null && Model.Any())
+        {
+            foreach (var item in Model)
+            {
+                var ribbonClass = item.ItemType.ToLower() switch
+                {
+                    "veg" => "ribbon-green",
+                    "non-veg" => "ribbon-red",
+                    "vegan" => "ribbon-yellow",
+                    _ => "ribbon-gray" 
+                };
+
+                <div class="item-card bg-white d-flex position-relative align-items-center" data-id="@item.Id">
+                    <div class="me-2 d-flex align-items-center">
+                        <img class="item-image"
+                            src="@(!string.IsNullOrEmpty(item.ItemImagePath)? item.ItemImagePath : "/images/dining-menu.png" )"
+                            width="50" alt="">
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="fw-semibold text-break">@item.Name</div>
+                        <div class="d-flex justify-content-between align-items-center mt-1 p-1">
+                            <div class="text-muted">₹@item.Rate</div>
+                            <i class="favourite @(item.IsFavourite ? "fa-solid heart-color" : "fa-regular text-secondary") fa-heart" data-itemid="@item.Id"></i>
+                        </div>
+                    </div>
+                    <div class="corner-ribbon position-absolute top-0 end-0 @ribbonClass"></div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="d-flex justify-content-center align-items-center w-100 fs-4 text-muted py-4">
+                No Items Found!
+            </div>
+        }
+    </div>
+</div>

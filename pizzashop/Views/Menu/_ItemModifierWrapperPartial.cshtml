@@ -1,0 +1,6 @@
+@model List<pizzashop_repository.ViewModels.ItemModifierGroupViewModel>
+
+@foreach (var modifierGroup in Model)
+{
+    @Html.Partial("_ItemModifierPartial", modifierGroup)
+}

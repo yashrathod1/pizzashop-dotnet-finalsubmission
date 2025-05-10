@@ -1,0 +1,107 @@
+@* @model pizzashop.ViewModels.LoginViewModel *@
+@model pizzashop_repository.ViewModels.LoginViewModel
+
+@{
+  Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Page</title>
+  <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="~/css/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
+
+</head>
+
+<body>
+  <div class="login-main">
+    <partial name="_LoginToaster.cshtml"></partial>
+    <div class="row flex-coloum m-0">
+      <div class="col-lg-6 p-0 ">
+        <img class="dominos-bg img-fluid" src="~/images/dominos_background.jpg" alt="">
+      </div>
+      <div class="col-lg-6 p-0 row2 d-flex justify-content-center">
+
+        <div class="login-side d-flex-coloum align-content-center">
+          <div class="d-flex justify-content-center">
+            <img class="img-fluid shop-logo" src="images/logos/pizzashop_logo.png" alt="">
+            <div class="ms-2 h1 text-center align-item-center shop-name" style="align-content: center;"> PIZZASHOP</div>
+          </div>
+          <div class="h2 mt-4 mb-4 ">Welcome,</div>
+
+
+          <form id="loginform" asp-action="Login" asp-controller="Auth" method="post">
+            <div class="d-flex-coloum justify-content-center">
+              <div class="form-floating mb-3 p-0 ">
+                <input type="email" asp-for="Email" class="form-control w-100 " style="position:relative;" id="email"
+                  placeholder="name@example.com">
+                <img style="position: absolute; right: 12px; margin-top: -37px;" src="images/icons/customer.svg" alt="">
+                <label for="floatingInput" class="w-100">
+                  <div class="d-flex justify-content-between w-100">
+                    <div>Email*</div>
+                  </div>
+                </label>
+                <span asp-validation-for="Email" class="text-danger"></span>
+              </div>
+              <div class="form-floating">
+                <input style="position: relative;" asp-for="Password" type="password" class="form-control" id="password"
+                  placeholder="Password">
+                <i class="far fa-eye" id="togglePassword"
+                  style=" cursor: pointer; position: absolute;  right: 12px; margin-top: -37px;"></i>
+                <label for="floatingPassword">Password*</label>
+                <span asp-validation-for="Password" class="text-danger"></span>
+              </div>
+            </div>
+            <div class="d-flex justify-content-between mt-2">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="RememberMe" asp-for="RememberMe"
+                  id="flexCheckDefault">
+                <label class="form-check-label " for="flexCheckDefault">
+                  Remember me
+                </label>
+              </div>
+              <div><a asp-controller="Auth" asp-action="ForgotPassword" id="forgotPasswordLink"
+                  class="text-decoration-none">forgot password?</a></div>
+            </div>
+            <button type="submit" class="btn btn-primary login-btn w-100 mt-3">Login</button>
+            <div class="text-danger">
+              @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            </div>
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <script src="js/custom.js"></script>
+  <script>
+    $(document).ready(function () {
+      $("#forgotPasswordLink").click(function () {
+        var email = $("#email").val();
+        $(this).attr("href", '@Url.Action("ForgotPassword", "Auth")' + '?Email=' + encodeURIComponent(email));
+      });
+    });
+
+    $(document).ready(function () {
+      const $passfield = $('#password');
+      $('#togglePassword').on('click', function () {
+        const type = $passfield.attr('type') === 'password' ? 'text' : 'password';
+        $passfield.attr('type', type);
+        $(this).toggleClass('fa-eye-slash');
+      });
+    });
+  </script>
+
+</body>
+
+
+</html>

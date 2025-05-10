@@ -1,0 +1,94 @@
+@using pizzashop_repository.ViewModels;
+@model PagedResult<ModifierViewModel>
+
+@{
+    var perms = ViewBag.Permissions as RolePermissionViewModel;
+}
+
+<table class="table">
+    <tr>
+        <th><input class="form-check-input row-checkbox" id="selectAllCheckbox" type="checkbox" value=""></th>
+        <th>Name</th>
+        <th>Unit</th>
+        <th>Rate</th>
+        <th>Quantity</th>
+        @if (perms?.CanaddEdit == true && perms?.Candelete == true)
+        {
+            <th>Action</th>
+        }
+        else if (perms?.CanaddEdit == true || perms?.Candelete == true)
+        {
+            <th>Action</th>
+        }
+    </tr>
+
+    @if (Model.Items.Any() && Model.Items != null)
+    {
+        @foreach (var modifier in Model.Items)
+        {
+            <tr>
+                <td>
+                    <div class="form-check">
+                        <input class="form-check-input row-checkbox" type="checkbox" value="@modifier.Id">
+                    </div>
+                </td>
+                <td>
+                    @modifier.Name
+                </td>
+                <td>
+                    @modifier.Unittype
+                </td>
+                <td>@modifier.Price</td>
+                <td>@modifier.Quantity</td>
+                <td>
+                    @if (perms?.CanaddEdit == true)
+                    {
+                        <button class="edit-modifier menu-edit-btn" data-id="@modifier.Id" data-bs-toggle="modal"
+                            data-bs-target="#EditModifiersModal"><img src="~/images/icons/pen.svg"></button>
+                    }
+                    @if (perms?.Candelete == true)
+                    {
+                        <button class="delete-modifier  menu-delete-btn" data-id="@modifier.Id" data-bs-toggle="modal"
+                            data-bs-target="#deleteModifierModal"><img src="~/images/icons/trash.svg"></button>
+                    }
+                </td>
+            </tr>
+        }
+    }
+    else
+    {
+        <tr>
+            <td colspan="7" class="text-center p-3">
+                No Modifier Available For This ModifierGroup
+            </td>
+        </tr>
+    }
+</table>
+
+
+<nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-end">
+        <li class="d-flex align-items-center pe-3">Items per page</li>
+        <li class="d-flex align-items-center pe-3" style="border-radius: 5px; height: 40px;">
+            <select id="ModifierPerPage" class="form-select">
+                <option value="5" selected="@(Model.PageSize == 5)">5</option>
+                <option value="10" selected="@(Model.PageSize == 10)">10</option>
+                <option value="15" selected="@(Model.PageSize == 15)">15</option>
+            </select>
+        </li>
+        <li class="d-flex align-items-center pe-3">Showing @(Model.PageNumber * Model.PageSize - Model.PageSize +
+            1)-@Math.Min(Model.PageNumber * Model.PageSize, Model.TotalCount) of @Model.TotalCount</li>
+
+        <li class="page-item @(Model.PageNumber == 1 ? "disabled" : "")">
+            <a class="page-link modifierpagination-link" href="#" data-page="@(Model.PageNumber - 1)">
+                <span class="sr-only"><img src="~/images/icons/chevron-left.svg" alt="Prev"></span>
+            </a>
+        </li>
+
+        <li class="page-item @(Model.PageNumber == Model.TotalPages ? "disabled" : "")">
+            <a class="page-link modifierpagination-link" href="#" data-page="@(Model.PageNumber + 1)">
+                <span class="sr-only"><img src="~/images/icons/chevron-right.svg" alt="Next"></span>
+            </a>
+        </li>
+    </ul>
+</nav>

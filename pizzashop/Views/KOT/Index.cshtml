@@ -1,0 +1,132 @@
+@model pizzashop_repository.ViewModels.KOTViewModel
+
+@{
+    Layout = "~/Views/Shared/_Layout_OrderApp.cshtml";
+}
+
+<head>
+    <link rel="stylesheet" href="~/css/kot.css">
+</head>
+
+<div class="container-fluid p-sm-0">
+    <div class="h4 blue-color text-center text-md-start m-md-3"><strong>KOT</strong></div>
+
+    <!-- Tabs -->
+    <div class="tabs-wrapper bg-white  m-md-3 shadow-box pt-2 ps-2">
+        <ul class="nav nav-tabs flex-column flex-sm-row " role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="all-tab" data-bs-toggle="tab" data-bs-target="#all" type="button"
+                    role="tab">
+                    <strong>All</strong>
+                </button>
+            </li>
+            @foreach (var category in Model.KOTCategory)
+            {
+                var tabId = $"tab-{category.Id}";
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="@tabId-tab" data-bs-toggle="tab" data-bs-target="#@tabId" type="button"
+                        role="tab">
+                        <strong class="text-muted">@category.Name</strong>
+                    </button>
+                </li>
+            }
+        </ul>
+    </div>
+
+    <!-- Tab Content -->
+    <div class="tab-content bg-white mt-3 m-md-3 shadow-box">
+        <!-- All Tab -->
+        <div class="tab-pane fade show active" id="all" role="tabpanel">
+            <div class="p-3">
+                <div class="row justify-content-between align-items-center mb-3">
+                    <div class="col-12 col-md-6 mb-2 mb-md-0">
+                        <div class="h4 blue-color text-center text-md-start"><strong>All</strong></div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <div class="d-flex flex-wrap justify-content-center justify-content-md-end mb-0">
+                            <button type="button" class="btn status-btn me-2" data-status="In Progress"><strong>In
+                                    Progress</strong></button>
+                            <button type="button" class="btn status-btn me-2"
+                                data-status="Ready"><strong>Ready</strong></button>
+                            <button type="button" class="btn prevBtn me-2"><strong>&lsaquo;</strong></button>
+                            <button type="button" class="btn nextBtn"><strong>&rsaquo;</strong></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="w-100 overflow-hidden" id="sliderWrapper">
+                    <div class="d-flex gap-2" id="sliderContainer">
+                        <!-- Order cards will load here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Category Tabs -->
+        @foreach (var category in Model.KOTCategory)
+        {
+            var tabId = $"tab-{category.Id}";
+            <div class="tab-pane fade" id="@tabId" role="tabpanel">
+                <div class="p-3">
+                    <div class="row justify-content-between align-items-center mb-3">
+                        <div class="col-12 col-md-6 mb-2 mb-md-0">
+                            <div class="h4 blue-color text-center text-md-start"><strong>@category.Name Items</strong></div>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <div class="d-flex flex-wrap justify-content-center justify-content-md-end mb-0">
+                                <button type="button" class="btn status-btn me-2" data-status="In Progress"><strong>In
+                                        Progress</strong></button>
+                                <button type="button" class="btn status-btn me-2"
+                                    data-status="Ready"><strong>Ready</strong></button>
+                                <button type="button" class="btn prevBtn me-2"><strong>&lsaquo;</strong></button>
+                                <button type="button" class="btn nextBtn"><strong>&rsaquo;</strong></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex gap-2 flex-wrap order-card-container" data-category-id="@category.Id">
+                        <!-- Order cards will load here -->
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+
+<!-- Bootstrap Modal -->
+<div class="modal fade" id="orderModal" tabindex="-1" aria-labelledby="orderModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold" id="orderModalLabel">Order ID: </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="row fw-semibold">
+                    <div class="col-6"><strong class="text-muted">Item</strong></div>
+                    <div class="col-6 text-end"><strong class="text-muted">Quantity</strong></div>
+                </div>
+
+                <input type="hidden" id="currentOrderStatus">
+                <hr class="mt-0">
+                <div id="orderModalBody">
+
+                </div>
+            </div>
+
+            <div class="modal-footer justify-content-end">
+                <button type="button" class="btn app-default-btn" id="markReadyBtn">
+                    <stron id="markReadyBtnText"></strong>
+                </button>
+                <button type="button" class="btn app-cancel-btn "
+                    data-bs-dismiss="modal"><strong>Cancel</strong></button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+<script src="~/js/kotview.js"></script>

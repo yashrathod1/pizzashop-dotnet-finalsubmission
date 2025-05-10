@@ -1,0 +1,49 @@
+@using pizzashop_repository.ViewModels;
+@model List<ModifierGroupViewModel>
+
+@{
+    var perms = ViewBag.Permissions as RolePermissionViewModel;
+}
+
+<ul id="modifiergroup-list">
+    @if (Model != null && Model.Any())
+    {
+        @foreach (var modifierGroup in Model)
+        {
+
+            <li class="mb-3 modifiergroup-item" data-id="@modifierGroup.Id" data-name="@modifierGroup.Name"
+                data-description="@modifierGroup.Description">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex">
+                        <div>
+                            <img class="sixdot-icon" src="/images/icons/dots-six-vertical-thin-svgrepo-com.svg" alt="">
+                        </div>
+                        <div><a href="#"
+                                class="modifiergroup-sidebar">@modifierGroup.Name</a>
+                        </div>
+                    </div>
+                    <div class="d-flex editdelete-actions d-none">
+                        @if (perms?.CanaddEdit == true)
+                        {
+                        <div class="me-2">
+                            <a href="#" class="edit-modifiergroup" data-id="@modifierGroup.Id">
+                                <img src="/images/icons/pen.svg" alt="">
+                            </a>
+                        </div>
+                        }
+                        @if (perms?.CanaddEdit == true)
+                        {
+                        <div>
+                            <a href="#" class="delete-modifiergroup" data-id="@modifierGroup.Id">
+                                <img src="/images/icons/trash.svg" alt="">
+                            </a>
+                        </div>
+                        }
+                    </div>
+                </div>
+            </li>
+
+
+        }
+    }
+</ul>

@@ -1,0 +1,164 @@
+@model pizzashop_repository.ViewModels.MenuItemViewModel
+
+<div class="modal-dialog modal-dialog-centered modal-xl">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Menu Item</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <form id="editMenuItemForm" method="post" enctype="multipart/form-data">
+                <div class="row">
+                    <div class="row col-md-8">
+                        <!-- Category -->
+                        <div class="col-md-6 col-12">
+                            @* <label asp-for="item.Categoryid" class="form-label"></label>
+                            <select asp-for="item.Categoryid" class="form-select" id="categoryid">
+                            <option value="" selected>Select Category</option>
+                            @foreach (var category in Model.Categories)
+                            {
+                            <option value="@category.Id">@category.Name</option>
+                            }
+                            </select> *@
+                            <label for="categoryDropdown" class="form-label">Category</label>
+                            <select class="form-select" asp-for="item.Categoryid" id="categoryDropdownEdit">
+                                <option selected value="">Loading categories...</option>
+                            </select>
+                            <span class="text-danger" asp-validation-for="item.Categoryid"></span>
+                        </div>
+
+                        <!-- Name -->
+                        <div class="col-md-6 col-12">
+                            <label asp-for="item.Name" class="form-label"></label>
+                            <input asp-for="item.Name" class="form-control" id="nameEditItem" />
+                            <span asp-validation-for="item.Name" class="text-danger"></span>
+                        </div>
+
+                        <!-- Item Type -->
+                        <div class="col-md-3 mt-3 col-12">
+                            <label asp-for="item.ItemType" class="form-label"></label>
+                            <select asp-for="item.ItemType" class="form-select" id="ItemTypeEditItem">
+                                <option value="">Select a type</option>
+                                <option value="Veg">Veg</option>
+                                <option value="Non-Veg">Non-Veg</option>
+                                <option value="Vegan">Vegan</option>
+                            </select>
+                            <span asp-validation-for="item.ItemType" class="text-danger"></span>
+                        </div>
+
+                        <!-- Rate -->
+                        <div class="col-md-3 mt-3">
+                            <label asp-for="item.Rate" class="form-label"></label>
+                            <input asp-for="item.Rate" class="form-control" id="rateEditItem" />
+                            <span asp-validation-for="item.Rate" class="text-danger"></span>
+                        </div>
+
+                        <!-- Quantity -->
+                        <div class="col-md-3 mt-3">
+                            <label asp-for="item.Quantity" class="form-label"></label>
+                            <input asp-for="item.Quantity" class="form-control" id="QuantityEditItem" />
+                            <span asp-validation-for="item.Quantity" class="text-danger"></span>
+                        </div>
+
+                        <!-- Unit -->
+                        <div class="col-md-3 mt-3">
+                            <label asp-for="item.Unit" class="form-label"></label>
+                            <select asp-for="item.Unit" class="form-select" id="UnitEditItem">
+                                <option value="">Select a unit</option>
+                                <option value="Pieces">Pieces</option>
+                                <option value="Grams">Grams</option>
+                            </select>
+                            <span asp-validation-for="item.Unit" class="text-danger"></span>
+                        </div>
+
+
+                        <!-- Availability Toggle -->
+                        <div class="col-md-3 mt-3 d-flex text-center align-items-center justify-content-center">
+                            <div class="form-check form-switch">
+                                <input asp-for="item.IsAvailable" class="form-check-input" type="checkbox"
+                                    id="IsAvailableEditItem" value="true"
+                                    style="width: 55px; height: 25px; margin-top: 8px;">
+                                <input type="hidden" name="IsAvailable" value="false">
+                                <label class="form-check-label m-2" for="IsAvailable1">Available</label>
+                            </div>
+                        </div>
+
+                        <!-- Default Tax Toggle -->
+                        <div class="col-md-3 mt-3 d-flex text-center align-items-center justify-content-center">
+                            <div class="form-check form-switch">
+                                <input asp-for="item.IsDefaultTax" class="form-check-input" type="checkbox"
+                                    id="IsDefaultTaxEditItem" value="true"
+                                    style="width: 55px; height: 25px; margin-top: 8px;">
+                                <input type="hidden" name="IsDefaultTax" value="false">
+                                <label class="form-check-label m-2" for="IsDefaultTax1">Default Tax</label>
+                            </div>
+                        </div>
+
+                        <!-- Tax Percentage -->
+                        <div class="col-md-3 mt-3">
+                            <label asp-for="item.TaxPercentage" class="form-label"></label>
+                            <input asp-for="item.TaxPercentage" class="form-control" id="TaxPercentageEditItem" />
+                            <span asp-validation-for="item.TaxPercentage" class="text-danger"></span>
+                        </div>
+
+                        <!-- Short Code -->
+                        <div class="col-md-3 mt-3">
+                            <label asp-for="item.ShortCode" class="form-label"></label>
+                            <input asp-for="item.ShortCode" class="form-control" id="ShortCodeEditItem" />
+                            <span asp-validation-for="item.ShortCode" class="text-danger"></span>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="col-md-12 mt-3">
+                            <label asp-for="item.Description" class="form-label"></label>
+                            <textarea asp-for="item.Description" class="form-control"
+                                id="DescriptionEditItem"></textarea>
+                            <span asp-validation-for="item.Description" class="text-danger"></span>
+                        </div>
+
+                        <input type="hidden" asp-for="item.Id" id="itemIdEditItem">
+
+                        <input type="hidden" asp-for="item.ItemImagePath" id="ItemImagePathEdit">
+
+                        <!-- Upload Image -->
+                        <div class="col-md-12 mt-3">
+                            <label for="ImageEditItem" class="form-label">Upload Image</label>
+                            <div class="border p-3 text-center image-upload-group" style="border: 2px dashed #ccc;">
+                                <input type="file" id="ImageEditItem" asp-for="item.ItemPhoto"
+                                    class="form-control image-input d-none" />
+                                <label for="ImageEditItem" class="text-primary">Drag and Drop or Browse Files</label>
+                                <p id="imageName" class="mt-2 text-muted image-name">
+
+                                </p>
+                                <span class="text-danger image-error" id="imageError"></span>
+                            </div>
+                            <span class="text-danger" asp-validation-for="item.ItemPhoto"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4" style="background-color: #fdf5e6;">
+                        <!-- Modifier Groups -->
+                        <div class="mt-3">
+                            <label class="form-label"></label>
+                            <select class="form-select" id="modifierGroupDropdownForItemEdit">
+                                <option value="" selected>Select ModifierGroups</option>
+                                @foreach (var modifiergroup in Model.ModifierGroup)
+                                {
+                                    <option value="@modifiergroup.Id">@modifiergroup.Name</option>
+                                }
+                            </select>
+                            <div id="modifierContainerForEdit"
+                                style="max-height: 360px; overflow-y: auto; padding: 5px;"></div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" form="editMenuItemForm" id="saveCategoryBtn" class="btn navbar-color text-white">Save</button>
+            <button type="button" class="btn cancel-btn-color ms-1"data-bs-dismiss="modal">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<script src="~/js/menuview.js"></script>

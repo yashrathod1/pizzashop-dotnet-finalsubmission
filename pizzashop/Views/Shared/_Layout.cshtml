@@ -1,0 +1,294 @@
+﻿@using pizzashop_repository.ViewModels
+@using pizzashop_service.Interface
+@inject IHttpContextAccessor HttpContextAccessor
+@inject IUserService UserService
+
+@{
+    RolePermissionViewModel? permissionsUser = await PermissionHelper.GetPermissionsAsync(HttpContextAccessor.HttpContext, "Users");
+    RolePermissionViewModel? permissionsRoleAndPermission = await PermissionHelper.GetPermissionsAsync(HttpContextAccessor.HttpContext,"RoleAndPermission");
+    RolePermissionViewModel? permissionsTableAndSection = await PermissionHelper.GetPermissionsAsync(HttpContextAccessor.HttpContext,"TableAndSection");
+    RolePermissionViewModel? permissionsTaxAndFee = await PermissionHelper.GetPermissionsAsync(HttpContextAccessor.HttpContext, "TaxAndFee");
+    RolePermissionViewModel? permissionsMenu = await PermissionHelper.GetPermissionsAsync(HttpContextAccessor.HttpContext, "Menu");
+    RolePermissionViewModel? permissionsCustomer = await PermissionHelper.GetPermissionsAsync(HttpContextAccessor.HttpContext, "Customers");
+    RolePermissionViewModel? permissionsOrder = await PermissionHelper.GetPermissionsAsync(HttpContextAccessor.HttpContext, "Order");
+    RolePermissionViewModel? perms = ViewBag.Permissions as RolePermissionViewModel;
+    string? username = Context.Request.Cookies["Username"];
+    string? profileimg = @Context.Request.Cookies["ProfileImgPath"];
+}
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]-PizzaShop</title>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/css/users.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
+ 
+ 
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg pizza-nav navbar-color ">
+        <div class="container-fluid navbar-pf">
+
+            <button class="btn btn-light d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebar"
+                aria-controls="sidebar">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-list"
+                    viewBox="0 0 16 16">
+                    <path fill-rule="evenodd"
+                        d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5" />
+                </svg>
+            </button>
+
+
+            <div class="btn-group">
+                @if (User.IsInRole("Chef"))
+                {
+                    <div class="my-2">
+                        <a asp-action="Index" asp-controller="KOT">
+                            <img style="width: 50px; height: 20px;" src="~/images/icons/phone.svg" />
+                        </a>
+                    </div>
+                }
+                else if (User.IsInRole("Account Manager"))
+                {
+                    <div class="my-2">
+                        <a asp-action="Index" asp-controller="Tables">
+                            <img style="width: 50px; height: 20px;" src="~/images/icons/phone.svg" />
+                        </a>
+                    </div>
+                }
+
+                <img class="dropdown-toggle rounded-circle border" data-bs-toggle="dropdown" aria-expanded="false" width="35" height="35"
+                    src="@profileimg" alt="">
+                <ul class="dropdown-menu dropdown-menu-end ">
+                    <li><a class="dropdown-item d-flex align-items-center" href="#">
+                            <img class="me-2 rounded-circle border" width="25" height="25" src="@profileimg" alt="">
+                            <p class="m-0">@username</p>
+                        </a></li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li><a class="dropdown-item d-flex align-items-center" asp-action="Profile"
+                            asp-controller="Dashboard">
+                            <img class="me-2 dashboard-icon rounded-circle border" src="@profileimg" width="25" height="25" alt="">
+                            <p class="m-0">My profile</p>
+                        </a></li>
+                    <li><a class="dropdown-item d-flex align-items-center" asp-action="ChangePassword"
+                            asp-controller="Dashboard">
+                            <img class="dashboard-icon me-1" src="~/images/icons/arrow-clockwise.svg" alt="">
+                            <p class="m-0">Change Password</p>
+                        </a></li>
+                    <li><a class="dropdown-item d-flex align-items-center" data-bs-toggle="modal"
+                            data-bs-target="#exampleModal">
+                            <div class="d-flex">
+                                <img class="dashboard-icon me-1" src="~/images/icons/box-arrow-right.svg" alt="">
+                                <p class="m-0">Logout</p>
+                            </div>
+                        </a></li>
+                </ul>
+            </div>
+            <!-- Modal -->
+
+            <div class="modal fade " id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" style="display: flex; justify-content: center;">
+                    <form>
+                        <div class="modal-content">
+                            <div class="modal-body">
+                                <div class="d-flex justify-content-center"><img class="warning-img"
+                                        src="~/images/toppng.com-warning-icon-2400x2400.png" alt=""></div>
+                                <div class="d-flex justify-content-center">Are you sure you want to logout?
+                                </div>
+                            </div>
+                            <div class="modal-footer d-flex justify-content-center">
+                                <div class=" mt-3">
+                                    <button type="submit" asp-action="Logout" asp-controller="Dashboard"
+                                        class="btn navbar-color text-white">Yes</button>
+                                    <button type="submit" class="btn cancel-btn-color ms-1">No</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+
+    <div class="offcanvas  offcanvas-start bg-light pizzasidebar d-lg-block"  tabindex="-1" id="sidebar"
+        data-bs-scroll="true" data-bs-backdrop="false">
+        <div class="offcanvas-header">
+            <div class="d-flex justify-content-center">
+                <img class="img-fluid w-50 shop-logo" src="~/images/logos/pizzashop_logo.png" alt="">
+                <div class="ms-2 h6 text-center align-item-center shop-name" style="align-content: center;">
+                    <strong>PIZZASHOP</strong>
+                </div>
+                <div><button type="button" class="btn-close d-lg-none" data-bs-dismiss="offcanvas"
+                        aria-label="Close"></button></div>
+            </div>
+        </div>
+        <div class="offcanvas-body">
+            <ul class="nav flex-column">
+
+                <li class="nav-item mb-2 sidebarlist-hover @(ViewBag.ActiveNav == "Dashboard" ? "selected-nav" : "")"><a
+                        class="nav-link" asp-action="Index" asp-controller="Dashboard">
+                        <div class="d-flex">
+                            <div>
+                                <img class="dashboard-icon" src="~/images/icons/border-all.svg" alt="">
+                            </div>
+
+                            <div class="sidebar-name ms-2"><strong>Dashboard</strong></div>
+                        </div>
+                    </a></li>
+                @if (permissionsUser?.Canview == true)
+                {
+                    <li class="nav-item mb-2 sidebarlist-hover  @(ViewBag.ActiveNav == "Users" ? "selected-nav" : "")"><a
+                            class="nav-link active"
+                            asp-action="UsersList" asp-controller="Users">
+                            <div class="d-flex">
+                                <div>
+                                    <img class="dashboard-icon" src="~/images/icons/people.svg" alt="">
+                                </div>
+
+                                <div class="sidebar-name ms-2"><strong>User</strong></div>
+                            </div>
+                        </a></li>
+                }
+                @if (permissionsRoleAndPermission?.Canview == true)
+                {
+                    <li class="nav-item mb-2 sidebarlist-hover @(ViewBag.ActiveNav == "Role" ? "selected-nav" : "")"><a
+                            class="nav-link" asp-action="Roles"
+                            asp-controller="Auth">
+                            <div class="d-flex">
+                                <div>
+                                    <img class="dashboard-icon" src="~/images/icons/person-gear.svg" alt="">
+                                </div>
+
+                                <div class="sidebar-name ms-2"><strong class="sidebar-blue">Role and Permission</strong></div>
+                            </div>
+                        </a></li>
+                }
+                @if (permissionsMenu?.Canview == true)
+                {
+                    <li class="nav-item mb-2 sidebarlist-hover @(ViewBag.ActiveNav == "Menu" ? "selected-nav" : "")"><a
+                            class="nav-link" asp-action="Menu" asp-controller="Menu">
+                            <div class="d-flex">
+                                <div>
+                                    <img class="dashboard-icon" src="~/images/icons/clipboard.svg" alt="">
+                                </div>
+
+                                <div class="sidebar-name ms-2"><strong>Menu</strong></div>
+                            </div>
+                        </a></li>
+                }
+                @if (permissionsTableAndSection?.Canview == true)
+                {
+                    <li class="nav-item mb-2 sidebarlist-hover @(ViewBag.ActiveNav == "TableAndSection" ? "selected-nav" : "")"><a
+                            class="nav-link  "
+                            asp-action="Index" asp-controller="TableAndSection">
+                            <div class="d-flex">
+                                <div>
+                                    <img class="dashboard-icon" src="~/images/icons/square.svg" alt="">
+                                </div>
+
+                                <div class="sidebar-name ms-2"><strong>Table And Section</strong></div>
+                            </div>
+                        </a></li>
+                }
+                @if (permissionsTaxAndFee?.Canview == true)
+                {
+                    <li class="nav-item mb-2 sidebarlist-hover @(ViewBag.ActiveNav == "TaxsAndFees" ? "selected-nav" : "")"><a
+                            class="nav-link " asp-action="Index"
+                            asp-controller="TaxesAndFees">
+                            <div class="d-flex">
+                                <div>
+                                    <img class="dashboard-icon" src="~/images/icons/cash-coin.svg" alt="">
+                                </div>
+
+                                <div class="sidebar-name ms-2"><strong>Taxs And Fees</strong></div>
+                            </div>
+                        </a></li>
+                }
+                @if (permissionsOrder?.Canview == true)
+                {
+                    <li class="nav-item mb-2 sidebarlist-hover @(ViewBag.ActiveNav == "Orders" ? "selected-nav" : "")"><a
+                            class="nav-link" asp-action="Index"
+                            asp-controller="Orders">
+                            <div class="d-flex">
+                                <div>
+                                    <img class="dashboard-icon" src="~/images/icons/clipboard-check.svg" alt="">
+                                </div>
+                                <div class="sidebar-name ms-2"><strong>Orders</strong></div>
+                            </div>
+                        </a></li>
+                }
+                @if (permissionsCustomer?.Canview == true)
+                {
+                    <li class="nav-item mb-2 sidebarlist-hover @(ViewBag.ActiveNav == "Customers" ? "selected-nav" : "")"><a
+                            class="nav-link" asp-action="Index"
+                            asp-controller="Customers">
+                            <div class="d-flex">
+                                <div>
+                                    <img class="dashboard-icon" src="~/images/icons/person-rolodex.svg" alt="">
+                                </div>
+
+                                <div class="sidebar-name ms-2"><strong>Customers</strong></div>
+                            </div>
+                        </a></li>
+                }
+            </ul>
+        </div>
+    </div>
+
+
+    <div id="main-content">
+        <partial name="_Notification.cshtml"></partial>
+        @RenderBody()
+    </div>
+
+    <script>
+        function handleResize() {
+            let sidebar = document.getElementById("sidebar");
+            let mainContent = document.getElementById("main-content");
+
+            if (window.innerWidth >= 992) {
+
+                sidebar.classList.add("show");
+                sidebar.classList.add("d-lg-block");
+                sidebar.style.transform = "none";
+                sidebar.style.visibility = "visible";
+                mainContent.style.marginLeft = "300px"; // Shift content
+            } else {
+
+                sidebar.classList.remove("show");
+                sidebar.classList.remove("d-lg-block");
+                sidebar.style.transform = "";
+                sidebar.style.visibility = "";
+                mainContent.style.marginLeft = "0";
+            }
+        }
+
+        handleResize();
+        window.addEventListener("resize", handleResize);
+    </script>
+    <script src="~/js/custom.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"></script>
+
+    <script src="~/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

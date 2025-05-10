@@ -1,0 +1,111 @@
+@{
+    ViewData["Title"] = "Order";
+}
+
+
+<head>
+    <link rel="stylesheet" href="~/css/orders.css">
+</head>
+
+
+
+<div class="container-fluid">
+    <div class="row  p-3">
+        <!-- Orders Heading -->
+        <div class="col-12 col-md-4 mb-3">
+            <h2 class="blue-color">Orders</h2>
+        </div>
+
+        <!-- Filters Section -->
+        <div class="col-12 col-md-8 order-header p-0">
+            <div class="row g-2  ">
+                <!-- Search Input -->
+                <div class="col-12 col-sm-6 col-md-3">
+                    <div class="form-floating">
+                        <input type="text" id="searchOrders" class="form-control" placeholder="Search">
+                        <label for="searchOrders">Search Orders</label>
+                    </div>
+                </div>
+
+                <!-- Status Dropdown -->
+                <div class="col-12 col-sm-6 col-md-3">
+                    <div class="form-floating">
+                        <select id="statusFilter" class="form-select">
+                            <option value="All">All Status</option>
+                            <option value="Pending">Pending</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="Served">Served</option>
+                            <option value="Completed">Completed</option>
+                            <option value="Cancelled">Cancelled</option>
+                            <option value="On Hold">On Hold</option>
+                            <option value="Failed">Failed</option>
+                        </select>
+                        <label for="statusFilter">Status</label>
+                    </div>
+                </div>
+
+                <!-- Date Range Dropdown -->
+                <div class="col-12 col-sm-6 col-md-3">
+                    <div class="form-floating">
+                        <select id="dateRangeFilter" class="form-select">
+                            <option value="All time">All Time</option>
+                            <option value="Last 7 days">Last 7 Days</option>
+                            <option value="Last 30 days">Last 30 Days</option>
+                            <option value="Current Month">Current Month</option>
+                        </select>
+                        <label for="dateRangeFilter">Date Range</label>
+                    </div>
+                </div>
+
+                <!-- Export Button -->
+                <div class="col-12 col-sm-6 col-md-3">
+                    <button type="button" id="exportBtn" class="btn navbar-color text-white btn-icon h-100 w-100">
+                        Export
+                    </button>
+                </div>
+            </div>
+
+            <div class="row mt-2 g-2">
+                <!-- From Date Picker -->
+                <div class="col-12 col-sm-6 col-md-4">
+                    <div class="form-floating">
+                        <input type="date" id="fromDate" class="form-control" placeholder="From Date">
+                        <label for="fromDate">From Date</label>
+                    </div>
+                </div>
+
+                <!-- To Date Picker -->
+                <div class="col-12 col-sm-6 col-md-4">
+                    <div class="form-floating">
+                        <input type="date" id="toDate" class="form-control" placeholder="To Date">
+                        <label for="toDate">To Date</label>
+                    </div>
+                </div>
+
+                <!-- Search Button -->
+                <div class="col-6 col-sm-3 col-md-2">
+                    <button type="button" id="searchBtn" class="btn navbar-color text-white h-100 w-100">
+                        Search
+                    </button>
+                </div>
+
+                <!-- Clear Button -->
+                <div class="col-6 col-sm-3 col-md-2">
+                    <button type="button" class="btn cancel-btn-color h-100 w-100">
+                        Clear
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="bg-white user-box p-3 mt-3">
+        <div id="orderTableList">
+            @* partial view load here *@
+        </div>
+    </div>
+
+</div>
+
+<script src="~/js/orderview.js"></script>

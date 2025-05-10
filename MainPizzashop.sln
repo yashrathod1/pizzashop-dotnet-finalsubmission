@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "pizzashop", "pizzashop\pizzashop.csproj", "{1C903354-35C0-4FD6-B1CE-085BF7E4A89C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "pizzashop_repository", "pizzashop_repository\pizzashop_repository.csproj", "{BECCDF3E-3D10-4633-8495-B4C7CFB1AF10}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "pizzashop_service", "pizzashop_service\pizzashop_service.csproj", "{357A03C1-94CF-4E35-8EF2-4D0534352F9C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1C903354-35C0-4FD6-B1CE-085BF7E4A89C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C903354-35C0-4FD6-B1CE-085BF7E4A89C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1C903354-35C0-4FD6-B1CE-085BF7E4A89C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1C903354-35C0-4FD6-B1CE-085BF7E4A89C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BECCDF3E-3D10-4633-8495-B4C7CFB1AF10}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BECCDF3E-3D10-4633-8495-B4C7CFB1AF10}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BECCDF3E-3D10-4633-8495-B4C7CFB1AF10}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BECCDF3E-3D10-4633-8495-B4C7CFB1AF10}.Release|Any CPU.Build.0 = Release|Any CPU
+		{357A03C1-94CF-4E35-8EF2-4D0534352F9C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{357A03C1-94CF-4E35-8EF2-4D0534352F9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{357A03C1-94CF-4E35-8EF2-4D0534352F9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{357A03C1-94CF-4E35-8EF2-4D0534352F9C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

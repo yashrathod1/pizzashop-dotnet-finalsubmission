@@ -1,0 +1,62 @@
+@using pizzashop_repository.ViewModels;
+@model List<SectionsViewModal>
+@{
+    var perms = ViewBag.Permissions as RolePermissionViewModel;
+}
+
+<ul id="sections-list">
+    @if (Model != null && Model.Any())
+    {
+        @foreach (var sections in Model)
+        {
+
+            <li class="mb-3 section-item" data-id="@sections.Id" data-name="@sections.Name"
+                data-description="@sections.Description">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex">
+                        <div>
+                            <img class="sixdot-icon" src="/images/icons/dots-six-vertical-thin-svgrepo-com.svg" alt="">
+                        </div>
+                        <div><a href="#"
+                                class="section-sidebar @(sections.Id == Model.First().Id ? "active" : " ")">@sections.Name</a>
+                        </div>
+                    </div>
+                    <div class="d-flex sections-actions d-none">
+                        @if (perms?.CanaddEdit == true)
+                        {
+                        <div class="me-2">
+                            <a href="#" class="edit-section" data-id="@sections.Id">
+                                <img src="/images/icons/pen.svg" alt="">
+                            </a>
+                        </div>
+                        }
+                        @if (perms?.Candelete == true)
+                        {
+                        <div>
+                            <a href="#" class="delete-section" data-id="@sections.Id">
+                                <img src="/images/icons/trash.svg" alt="">
+                            </a>
+                        </div>
+                        }
+                    </div>
+                </div>
+            </li>
+
+
+        }
+    }
+</ul>
+
+<script>
+    $(document).on("click", ".section-item", function (event) {
+    event.stopPropagation();
+
+
+    $(".section-item").removeClass("selected");
+    $(".sections-actions").addClass("d-none");
+
+
+    $(this).addClass("selected");
+    $(this).find(".sections-actions").removeClass("d-none");
+});
+</script>

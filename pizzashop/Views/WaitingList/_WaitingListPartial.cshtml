@@ -1,0 +1,51 @@
+@model List<pizzashop_repository.ViewModels.WaitingListItemViewModel>
+
+<div class="table-responsive">
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>#Token No</th>
+                <th>Created At</th>
+                <th>Waiting Time</th>
+                <th>Name</th>
+                <th>No. of Persons</th>
+                <th>Phone Number</th>
+                <th>Email</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Any())
+            {
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Id</td>
+                        <td>@item.CreatedAt.ToString("MMM dd, yyyy hh:mm tt")</td>
+                          @* <span class="text-muted live-timer-kot"  data-starttime="@Model.CreatedAt.ToString("yyyy-MM-ddTHH:mm:ss")"></span> *@
+                        <td class="text-muted live-timer-token"  data-starttime="@item.WaitingTime.ToString("yyyy-MM-ddTHH:mm:ss")" ></td>
+                        <td>@item.Name</td>
+                        <td>@item.NoOfPerson</td>
+                        <td>@item.PhoneNumber</td>
+                        <td>@item.Email</td>
+                        <td>
+                            <button class="edit-waiting-token btn-bg-remove" data-id="@item.Id"><img src="~/images/icons/pen.svg"></button>
+                            <button class=" btn-bg-remove token-delete-btn" data-id="@item.Id"><img src="~/images/icons/trash.svg"></button>
+                            <button class=" btn-bg-remove table-assign"data-id="@item.Id"
+                            data-customer-id="@item.CustomerId" data-number-of-persons="@item.NoOfPerson" data-section-id="@item.SectionId" ><img src="~/images/icons/person-check.svg"></button>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="8" class="text-center text-muted p-3">
+                        No Waiting Token For This Section
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

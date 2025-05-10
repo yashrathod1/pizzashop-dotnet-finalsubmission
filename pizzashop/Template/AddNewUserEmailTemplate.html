@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Reset Email</title>
+    <!-- For Outlook-specific styles -->
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        table,
+        td {
+            border: 0;
+            padding: 0;
+        }
+
+
+        .email-wrapper {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background-color: #0066a7;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .pizzashoplogoimg {
+            height: 50px;
+            width: 59px;
+        }
+
+        .heading {
+            font-size: 28px;
+            margin: 10px 0;
+        }
+
+        .content {
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+
+        .important {
+            color: rgb(228, 118, 27);
+        }
+
+
+        @media only screen and (max-width: 600px) {
+            .content {
+                padding: 15px;
+            }
+
+            .heading {
+                font-size: 24px;
+            }
+        }
+
+        .login_details {
+            border: 1px solid black;
+            padding: 10px;
+        }
+        .header_in{
+            display: flex;
+            justify-content: center ;
+
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <table class="email-wrapper" role="presentation" cellpadding="0" cellspacing="0">
+        <tr>
+            <td>
+                <!-- Header Section -->
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" class="header">
+                    <tr>
+                        <td>
+                            <div class="header_in">
+                                <div> <img src="~/images/logos/pizzashop_logo.png" alt="Pizza Shop" class="pizzashoplogoimg"></div>
+                                <div><h2 class="heading">PIZZASHOP</h2></div>
+                            </div>
+                        </td>
+                        <!-- <td align ="center">
+                            <img src="~/images/logos/pizzashop_logo.png" alt="Pizza Shop" class="pizzashoplogoimg">
+                            <h2 class="heading">PIZZASHOP</h2>
+                        </td> -->
+                    </tr>
+                </table>
+
+                <!-- Content Section -->
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" class="content" >
+                    <tr>
+                        <td>
+                            <p>Welcome to Pizza shop</p>
+                            <p>Please find details below for login into your account</p>
+                            <div class="login_details">
+                                <h2>Login Details</h2>
+                                <h4>Username: <b>{Email}</b></h4>
+                                <h4>Password: <b>{Password}</b></h4>
+                            </div>
+                           <p>if you encounter any issue or have any question, please do not hesitate to contact our support team</p>
+                        </td>
+                    </tr>
+                </table>
+
+
+            </td>
+        </tr>
+    </table>
+
+</body>
+
+</html>

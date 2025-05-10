@@ -1,0 +1,39 @@
+@{
+    ViewData["Title"] = "RoleAndPermission";
+}
+
+
+<div class="bg-white user-box ms-5 me-5  p-5 mt-5">
+    <div class="mt-4 mb-5">
+
+        <div class="d-flex justify-content-between">
+            <div class="h5"><strong>Role</strong></div>
+            <div class="h5"><strong>Action</strong></div>
+        </div>
+        <hr>
+
+        <div class="d-flex justify-content-between">
+            <div>Admin</div>
+            <div>
+                <a asp-action="Permissions" asp-controller="Auth" asp-route-role="Admin"><img src="~/images/icons/pen.svg" alt=""></a>
+            </div>
+        </div>
+        <hr>
+
+        <div class="d-flex justify-content-between">
+            <div>Account Manager</div>
+            <div>
+                <a asp-action="Permissions" asp-controller="Auth" asp-route-role="Account Manager"><img src="~/images/icons/pen.svg" alt=""></a>
+            </div>
+        </div>
+        <hr>
+
+        <div class="d-flex justify-content-between">
+            <div>Chef</div>
+            <div>
+                <a asp-action="Permissions" asp-controller="Auth" asp-route-role="Chef" ><img src="~/images/icons/pen.svg" alt=""></a>
+            </div>
+        </div>
+        <hr>
+    </div>
+</div>

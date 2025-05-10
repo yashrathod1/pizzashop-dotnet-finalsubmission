@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Reset Email</title>
+    <!-- For Outlook-specific styles -->
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        table,
+        td {
+            border: 0;
+            padding: 0;
+        }
+
+   
+        .email-wrapper {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background-color: #0066a7;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .pizzashoplogoimg {
+            height: 50px;
+            width: 59px;
+        }
+
+        .heading {
+            font-size: 28px;
+            margin: 10px 0;
+        }
+
+        .content {
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+
+        .important {
+            color: rgb(228, 118, 27);
+        }
+
+    
+        @media only screen and (max-width: 600px) {
+            .content {
+                padding: 15px;
+            }
+
+            .heading {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    
+    <table class="email-wrapper" role="presentation" cellpadding="0" cellspacing="0">
+        <tr>
+            <td>
+                <!-- Header Section -->
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" class="header">
+                    <tr>
+                        <td align ="center">
+                            <img src="~/images/logos/pizzashop_logo.png" alt="Pizza Shop" class="pizzashoplogoimg">
+                          <h2 class="heading">PIZZASHOP</h2>
+                        </td>
+                    </tr>
+                </table>
+
+                <!-- Content Section -->
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" class="content" >
+                    <tr>
+                        <td>
+                            <p>Pizza Shop,</p>
+                            <p>Please click <a href="{ResetLink}">here</a> to reset your account password.</p>
+                            <p>If you encounter any issues or have any questions, please do not hesitate to contact our support team.</p>
+                            <p><span class="important">Important Note:</span>
+                                For security reasons, the link will expire in 24 hours. If you did not request a password reset, please ignore this email or contact our support team immediately.
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+
+            
+            </td>
+        </tr>
+    </table>
+	
+</body>
+
+</html>

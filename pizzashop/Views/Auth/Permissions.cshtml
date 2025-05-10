@@ -1,0 +1,176 @@
+@using pizzashop_repository.ViewModels;
+@model List<RolePermissionViewModel>
+
+@{
+    ViewData["Title"] = "Permissions";
+}
+
+<div class="d-flex mt-3 p-3 justify-content-between">
+    <div class="h2 blue-color"><strong>Permission</strong></div>
+    <a asp-action="Roles" asp-controller="Auth" class="back-btn btn cancel-btn-color">
+        <div class="blue-color">&lt; Back</div>
+    </a>
+</div>
+
+<div class="bg-white user-box ms-4 me-4 p-3 mt-3">
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="roleinput" name="role" value="@ViewBag.SelectedRole"
+                    readonly>
+                <label for="floatingInput">Role</label>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="table-responsive">
+        <table class="table">
+            <tr class="permission-row">
+                <th scope="col" class="">
+                    <div class="form-check">
+                        <input class="form-check-input  " type="checkbox" onclick="check(this);" value=""
+                            id="selectAll">
+                    </div>
+                </th>
+                <th>Permission</th>
+                <th>Can View</th>
+                <th>Can Add/Edit</th>
+                <th>Can Delete</th>
+            </tr>
+
+            @foreach (var permission in Model)
+            {
+                <tr>
+                    <td scope="col" class="">
+                        <div class="form-check">
+                            <input class="form-check-input row-checkbox" type="checkbox" value="">
+                        </div>
+                    </td>
+                    <td>@permission.PermissionName</td>
+                    <td>
+                        <div class="form-check form-switch ">
+                            <input type="checkbox" class="form-check-input custom-switch" data-id="@permission.Permissionid"
+                                data-name="@permission.PermissionName" data-role="@ViewBag.SelectedRole" data-type="CanView"
+                            @(permission.Canview ? "checked" : "")>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-check form-switch ">
+                            <input type="checkbox" class="form-check-input custom-switch" data-id="@permission.Permissionid"
+                                data-name="@permission.PermissionName" data-role="@ViewBag.SelectedRole"
+                                data-type="CanAddEdit" @(permission.CanaddEdit ? "checked" : "")>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-check form-switch ">
+                            <input type="checkbox" class="form-check-input custom-switch" data-id="@permission.Permissionid"
+                                data-name="@permission.PermissionName" data-role="@ViewBag.SelectedRole"
+                                data-type="CanDelete" @(permission.Candelete ? "checked" : "")>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+
+
+    <div class="d-flex justify-content-end mt-3">
+        <button type="button" id="saveBtn" class="btn navbar-color text-white">Save</button>
+        <a type="button" class="btn cancel-btn-color ms-1" asp-action="Roles" asp-controller="Auth">Cancel</a>
+    </div>
+
+</div>
+
+<script>
+    $(document).ready(function () {
+        var urlPramas = new URLSearchParams(window.location.search);
+        var role = urlPramas.get("role");
+
+        $("#selectAll").change(function () {
+            var isChecked = $(this).is(":checked");
+            $(".row-checkbox, .custom-switch").prop("checked", isChecked);
+        });
+
+
+        $(".row-checkbox").change(function () {
+            var isChecked = $(this).is(":checked");
+            $(this).closest("tr").find(".custom-switch").prop("checked", isChecked);
+        });
+
+
+        $(".custom-switch").change(function () {
+            var row = $(this).closest("tr");
+            var allSwitches = row.find(".custom-switch");
+            var rowCheckbox = row.find(".row-checkbox");
+
+            if (allSwitches.filter(":checked").length > 0) {
+                rowCheckbox.prop("checked", true);
+            } else {
+                rowCheckbox.prop("checked", false);
+            }
+
+
+            if ($(".row-checkbox:checked").length === $(".row-checkbox").length) {
+                $("#selectAll").prop("checked", true);
+            } else {
+                $("#selectAll").prop("checked", false);
+            }
+        });
+
+        $("#saveBtn").click(function () {
+            var updatedPermissions = [];
+
+            $(".custom-switch").each(function () {
+                var permissionId = $(this).data("id");
+                var roleId = $(this).data("role");
+                var permissionName = $(this).data("name");  // Get permission name
+                var type = $(this).data("type");
+                var isChecked = $(this).is(":checked");
+
+                if (permissionId && roleId && type) {
+                    var existing = updatedPermissions.find(p => p.PermissionId === permissionId);
+                    if (!existing) {
+                        existing = {
+                            RoleId: roleId,
+                            PermissionId: permissionId,
+                            PermissionName: permissionName, // Add PermissionName
+                            CanView: false,
+                            CanAddEdit: false,
+                            CanDelete: false
+                        };
+                        updatedPermissions.push(existing);
+                    }
+                    existing[type] = isChecked;
+                }
+            });
+
+            console.log("Sending Data:", JSON.stringify(updatedPermissions)); // Debugging log
+
+
+
+            $.ajax({
+                url: "/Auth/UpdatePermissions?role=" + encodeURIComponent(role),
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(updatedPermissions), // Ensure JSON format
+                success: function (response) {
+                    console.log("Server Response:", response);
+                    if (response.success) {
+                        setTimeout(function () {
+                            window.location.reload();
+                        }, 500); //
+                        toastr.success("Permissions updated successfully.");
+                    } else {
+                        toastr.alert("Failed to update permissions: " + response.message);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("AJAX Error:", status, error);
+                    toastr.alert("Error updating permissions. Check console logs.");
+                }
+            });
+        });
+    });
+
+</script>

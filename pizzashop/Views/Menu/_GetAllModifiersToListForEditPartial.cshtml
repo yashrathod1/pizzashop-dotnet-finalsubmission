@@ -1,0 +1,55 @@
+@using pizzashop_repository.ViewModels;
+@model PagedResult<ModifierViewModel>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th><input type="checkbox" class="form-check-input" id="selectAllModifiers"></th>
+            <th>Name</th>
+            <th>Unit</th>
+            <th>Rate</th>
+            <th>Quantity</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var modifier in Model.Items)
+        {
+            <tr>
+                <td><input type="checkbox" class="form-check-input allmodifieredit-checkbox" value="@modifier.Id" data-name="@modifier.Name"></td>
+                <td>@modifier.Name</td>
+                <td>@modifier.Unittype</td>
+                <td>@modifier.Price</td>
+                <td>@modifier.Quantity</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-end">
+        <li class="d-flex align-items-center pe-3">Items per page</li>
+        <li class="d-flex align-items-center pe-3" style="border-radius: 5px; height: 40px;">
+            <select id="AllModifierForEditPerPage" class="form-select">
+                <option value="1" selected="@(Model.PageSize == 1)">1</option>
+                <option value="2" selected="@(Model.PageSize == 2)">2</option>
+                <option value="3" selected="@(Model.PageSize == 3)">3</option>
+                <option value="4" selected="@(Model.PageSize == 4)">4</option>
+                <option value="5" selected="@(Model.PageSize == 5)">5</option>
+            </select>
+        </li>
+        <li class="d-flex align-items-center pe-3">Showing @(Model.PageNumber * Model.PageSize - Model.PageSize +
+            1)-@Math.Min(Model.PageNumber * Model.PageSize, Model.TotalCount) of @Model.TotalCount</li>
+
+        <li class="page-item @(Model.PageNumber == 1 ? "disabled" : "")">
+            <a class="page-link allmodifiereditpagination-link" href="#" data-page="@(Model.PageNumber - 1)">
+                <span class="sr-only"><img src="~/images/icons/chevron-left.svg" alt="Prev"></span>
+            </a>
+        </li>
+
+        <li class="page-item @(Model.PageNumber == Model.TotalPages ? "disabled" : "")">
+            <a class="page-link allmodifiereditpagination-link" href="#" data-page="@(Model.PageNumber + 1)">
+                <span class="sr-only"><img src="~/images/icons/chevron-right.svg" alt="Next"></span>
+            </a>
+        </li>
+    </ul>
+</nav>

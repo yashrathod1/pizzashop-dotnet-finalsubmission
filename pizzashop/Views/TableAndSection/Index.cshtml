@@ -1,0 +1,341 @@
+@using pizzashop_repository.ViewModels
+@model pizzashop_repository.ViewModels.TableAndSectionViewModel
+@{
+    ViewData["Title"] = "TableAndSection";
+    var perms = ViewBag.Permissions as RolePermissionViewModel;
+}
+
+<head>
+    <link rel="stylesheet" href="~/css/tableandsection.css">
+</head>
+
+
+
+<div class=" d-flex mt-3 p-3 ms-2 justify-content-between ">
+    <div class="h2 blue-color"><strong>Sections/Table</strong></div>
+</div>
+
+<div class="bg-white user-box ms-4 me-4   mt-2 ">
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-2 col-md-4 Section-color">
+                <div class="d-flex-coloum">
+                    <div class="d-flex justify-content-between mt-3">
+                        <div>
+                            <div class="h5">Sections</div>
+                        </div>
+                        <div>
+                            @if (perms?.CanaddEdit == true)
+                            {
+                            <div class="ms-1">
+                                <button type="button" class="trash-btn fw-bold  blue-color custom-blue-border" data-bs-toggle="modal"
+                                    data-bs-target="#addSectionModal">
+                                    <img src="~/images/icons/plus-lg.svg">
+                                </button>
+                            </div>
+                            }
+                        </div>
+                    </div>
+                    <div class="mt-3 sections-list" id="sectionsContainer">
+                        @* section partialview load here *@
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-10 col-md-8">
+                <div class="h6 mt-2 blue-color">Tables</div>
+                <div class="d-flex justify-content-end">
+                    <div class="form-group has-search">
+                        <span class="fa fa-search form-control-feedback"></span>
+                        <input type="text" class="form-control" id="searchTables" placeholder="Search">
+                    </div>
+                    @if (perms?.Candelete == true)
+                    {
+                    <div class="ms-4 mt-1"><button id="deleteSelectedBtnForTables" class="table-deletes-btn"><img src="~/images/icons/trash.svg" alt=""></button>
+                    </div>
+                    }
+                    @if (perms?.CanaddEdit == true)
+                    {
+                    <div class="ms-4"><button type="button" data-bs-toggle="modal" data-bs-target="#addTableModal"
+                            class="btn menu-new-item-btn text-white">+New
+                            Table</button>
+                    </div>
+                    }
+                </div>
+                <div>
+                    <div class="table-responsive mt-3">
+                        <div id="TableListContainer">
+                            @* @await Html.PartialAsync("_ModifierListPartial") *@
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* modals *@
+
+
+@* addsection modal *@
+
+<div class="modal fade" id="addSectionModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form method="post" id="addSectionForm">
+                <div class="modal-header">
+                    <h5 class="modal-title g-white" id="exampleModalLabel">Add Section</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" asp-for="Section.Name" id="sectionname"
+                            placeholder="Section Name">
+                        <label asp-for="Section.Name">Name</label>
+                        <span asp-validation-for="Section.Name" class="text-danger"></span>
+                        <input type="hidden" id="sectionId">
+                    </div>
+                    <div class="form-floating">
+                        <textarea class="form-control" id="sectiondescription" placeholder="Description"></textarea>
+                        <label for="sectiondescription">Description</label>
+                    </div>
+                </div>
+                <div class="modal-footer d-flex justify-content-center">
+                    <button type="submit" id="saveSectionBtn" class="btn navbar-color text-white">Save</button>
+                    <button type="button" class="btn cancel-btn-color ms-1" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@* editsection modal *@
+
+<div class="modal fade" id="editSectionModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form method="post" id="editSectionForm">
+                <div class="modal-header">
+                    <h5 class="modal-title g-white" id="exampleModalLabel">Edit Section</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" asp-for="Section.Name" id="Name"
+                            placeholder="Section Name">
+                        <label asp-for="Section.Name">Name</label>
+                        <span asp-validation-for="Section.Name" class="text-danger"></span>
+                        <input type="hidden" id="SectionId1">
+                    </div>
+                    <div class="form-floating">
+                        <textarea class="form-control" id="Description" placeholder="Description"></textarea>
+                        <label for="sectiondescription">Description</label>
+                    </div>
+                </div>
+                <div class="modal-footer d-flex justify-content-center">
+                    <button type="submit" class="btn navbar-color text-white">Save</button>
+                    <button type="button" class="btn cancel-btn-color ms-1" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+@* delete section modal *@
+
+<div class="modal fade" id="deleteSectionModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <img class="warning-img" src="~/images/toppng.com-warning-icon-2400x2400.png" alt="">
+                <p>Are you sure you want to delete this Section?</p>
+            </div>
+            <div class="modal-footer d-flex justify-content-center">
+                <button type="button" id="confirmDeleteBtnSection" class="btn navbar-color text-white">Yes</button>
+                <button type="button" class="btn cancel-btn-color ms-1" data-bs-dismiss="modal">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@* add table modal *@
+
+<div class="modal fade" id="addTableModal" tabindex="-1" aria-labelledby="addTableModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form id="addTableForm" method="post">
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <!-- Name Input -->
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input asp-for="Table.Name" class="form-control" placeholder="Table Name">
+                                <label asp-for="Table.Name">Table Name*</label>
+                                <span asp-validation-for="Table.Name" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <!-- Section Dropdown -->
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <select asp-for="Table.SectionId" class="form-select">
+                                    <option value="">Select Section</option>
+                                    @foreach (var sections in Model.Sections)
+                                    {
+                                        <option value="@sections.Id">@sections.Name</option>
+                                    }
+                                </select>
+                                <label asp-for="Table.SectionId">Section*</label>
+                                <span asp-validation-for="Table.SectionId" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <!-- Capacity Input -->
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input asp-for="Table.Capacity" class="form-control" placeholder="Capacity">
+                                <label asp-for="Table.Capacity">Capacity*</label>
+                                <span asp-validation-for="Table.Capacity" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <!-- Status Dropdown -->
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <select asp-for="Table.Status" class="form-select">
+                                    <option value="Available" selected>Available</option>
+                                    <option value="Occupied">Occupied</option>
+                                      <option value="Assigned">Assigned</option>
+                                </select>
+                                <label asp-for="Table.Status">Status*</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer d-flex justify-content-end">
+                    <button type="submit" class="btn navbar-color text-white" id="saveTableBtn">Save</button>
+                    <button type="button" class="btn cancel-btn-color ms-1" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+
+@* edittable modal *@
+
+<div class="modal fade" id="editTableModal" tabindex="-1" aria-labelledby="editTableModalLabel">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editTableModalLabel">Edit Table</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editTableForm" method="post">
+                    <input type="hidden" asp-for="Table.Id" id="tableId1" /> <!-- Hidden ID for Editing -->
+
+                    <div class="row g-3">
+                        <!-- Name Input -->
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input asp-for="Table.Name" class="form-control" id="Name1" placeholder="Table Name"
+                                    required>
+                                <label asp-for="Table.Name">Name*</label>
+                                <span asp-validation-for="Table.Name" class="text-danger"></span>
+                                <!-- Validation Message -->
+                            </div>
+                        </div>
+
+                        <!-- Section Dropdown -->
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <select asp-for="Table.SectionId" class="form-select" id="SectionId2">
+                                    <option value="" selected>Select Section</option>
+                                    @foreach (var sections in Model.Sections)
+                                    {
+                                        <option value="@sections.Id">@sections.Name</option>
+                                    }
+                                </select>
+                                <label asp-for="Table.SectionId">Section*</label>
+                                <span asp-validation-for="Table.SectionId" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <!-- Capacity Input -->
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input asp-for="Table.Capacity" type="number" class="form-control" id="Capacity1"
+                                    min="1" required>
+                                <label asp-for="Table.Capacity">Capacity*</label>
+                                <span asp-validation-for="Table.Capacity" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <!-- Status Dropdown -->
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <select asp-for="Table.Status" class="form-select" id="Status1">
+                                    <option value="">Select Status</option>
+                                    <option value="Available">Available</option>
+                                    <option value="Occupied">Occupied</option>
+                                    <option value="Assigned">Assigned</option>
+                                </select>
+                                <label asp-for="Table.Status">Status*</label>
+                                <span asp-validation-for="Table.Status" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer d-flex justify-content-end">
+                        <button type="submit" class="btn navbar-color text-white" id="saveTableBtn">Save</button>
+                        <button type="button" class="btn cancel-btn-color ms-1" data-bs-dismiss="modal">No</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@* delete table model *@
+
+<div class="modal fade" id="deleteTableModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <img class="warning-img" src="~/images/toppng.com-warning-icon-2400x2400.png" alt="">
+                <p>Are you sure you want to delete this table?</p>
+                <input type="hidden" id="deleteTableId">
+            </div>
+            <div class="modal-footer d-flex justify-content-center">
+                <button type="button" id="confirmDeleteBtnTable" class="btn navbar-color text-white">Yes</button>
+                <button type="button" class="btn cancel-btn-color ms-1" data-bs-dismiss="modal">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* delete Tables modal *@
+
+<div class="modal fade" id="deleteTablesModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <img class="warning-img" src="~/images/toppng.com-warning-icon-2400x2400.png" alt="">
+                <p>Are you sure you want to delete this tables?</p>
+                <input type="hidden" id="deleteTablesId">
+            </div>
+            <div class="modal-footer d-flex justify-content-center">
+                <button type="button" id="confirmDeleteBtnTables" class="btn navbar-color text-white">Yes</button>
+                <button type="button" class="btn cancel-btn-color ms-1" data-bs-dismiss="modal">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="~/js/tableandsectionview.js"></script>

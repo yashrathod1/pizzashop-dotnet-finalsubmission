@@ -1,0 +1,37 @@
+@using pizzashop_repository.ViewModels
+@model pizzashop_repository.ViewModels.PaginatedUserViewModel
+@{
+    ViewData["Title"] = "UserList";
+    var perms = ViewBag.Permissions as RolePermissionViewModel;
+}
+
+<head>
+    <link rel="stylesheet" href="~/css/users.css">
+</head>
+
+<div class="d-flex mt-3 p-3 justify-content-between">
+    <div class="h2 blue-color"><strong>Users</strong></div>
+    <div class="d-flex">
+        <form method="get" action="@Url.Action("UsersList")" class="d-flex">
+            <div class="form-group position-relative">
+                <input type="text" id="searchUsers" name="searchTerm" class="form-control search-input p-3"
+                    placeholder="Search" onkeyup="searchUsers()" autocomplete="off">
+
+                <button type="submit" class="search-icon  border-0 bg-transparent">
+                    <img class="position-absolute" style="margin-left: -12px;" src="~/images/icons/search.svg" alt="">
+                </button>
+
+            </div>
+        </form>
+        @if (perms?.CanaddEdit == true)
+        {
+            <div><a class="btn navbar-color text-white p-3" asp-action="AddUser" asp-controller="Users">+Add User</a></div>
+        }
+    </div>
+</div>
+
+<div class="bg-white user-box ms-4 me-4 p-3 mt-3" id="userListContainer">
+
+</div>
+
+<script src="~/js/userview.js"></script>

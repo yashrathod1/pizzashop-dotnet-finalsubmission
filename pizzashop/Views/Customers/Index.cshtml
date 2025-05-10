@@ -1,0 +1,181 @@
+@{
+    ViewData["Title"] = "Customer";
+}
+
+<style>
+    .info-box {
+        padding: 10px;
+        border-radius: 5px;
+        box-shadow: 2px 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .modal-body {
+        background: #f8f9fa;
+    }
+</style>
+
+
+<div class="container-fluid">
+    <div class="row  p-3">
+        <!-- Orders Heading -->
+        <div class="col-12 col-md-6 mb-3">
+            <h2 class="blue-color">Customers</h2>
+        </div>
+
+        <!-- Filters Section -->
+        <div class="col-12 col-md-6 order-header p-0">
+            <div class="row g-2  ">
+                <!-- Search Input -->
+                <div class="col-12 col-sm-6 col-md-5">
+                    <div class="form-floating">
+                        <input type="text" id="searchCustomers" class="form-control" placeholder="Search">
+                        <label for="searchCustomers">Search</label>
+                    </div>
+                </div>
+
+                <!-- Date Range Dropdown -->
+                <div class="col-12 col-sm-6 col-md-5">
+                    <div class="form-floating">
+                        <select id="dateRangeFilterCustomer" class="form-select">
+                            <option value="All time">All Time</option>
+                            <option value="Last 7 days">Last 7 Days</option>
+                            <option value="Last 30 days">Last 30 Days</option>
+                            <option value="Current Month">Current Month</option>
+                            <option value="Custom Date">Custom Date</option>
+                        </select>
+                        <label for="dateRangeFilterCustomer">Date Range</label>
+                    </div>
+                </div>
+
+                <!-- Export Button -->
+                <div class="col-12 col-sm-6 col-md-2">
+                    <button type="button" id="exportBtnCustomer" class="btn navbar-color text-white btn-icon h-100 w-100">
+                        Export
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="bg-white user-box p-3 mt-3">
+        <div id="customerTableList">
+            @* partial view load here *@
+        </div>
+    </div>
+
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="customerHistoryModal" tabindex="-1" aria-labelledby="customerHistoryModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="customerHistoryModalLabel">Customer History</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Customer Details -->
+                    <div class="row g-3 mb-3">
+                        <div class="bg-white card p-1 col-md-6">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="info-box d-flex justify-content-between">
+                                        <div><label class="text-muted">Name</label></div>
+                                        <div><strong  id="customerName"></strong></div>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="info-box d-flex justify-content-between">
+                                        <div><label class="text-muted">Mobile Number</label></div>
+                                        <div><strong id="customerPhone"></strong></div>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="info-box border d-flex justify-content-between">
+                                        <div><label class="text-muted">Max Order</label></div>
+                                        <div><strong id="maxOrder"></strong></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="col-12">
+                                <div class="info-box d-flex justify-content-between">
+                                    <div><label class="text-muted">Average Bill</label></div>
+                                    <div><strong id="averageBill"></strong></div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="info-box border d-flex justify-content-between">
+                                    <div><label class="text-muted">Coming Since</label></div>
+                                    <div><strong id="comingSince"></strong></div>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="info-box border d-flex justify-content-between">
+                                    <div><label class="text-muted">Visits</label></div>
+                                    <div><strong id="visitCount"></strong></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Order History Table -->
+                    <div class="table-responsive">
+                        <table class="table" id="customerOrders">
+                            <thead>
+                                <tr>
+                                    <th class="text-muted">Order Date</th>
+                                    <th class="text-muted">Order Type</th>
+                                    <th class="text-muted">Payment</th>
+                                    <th class="text-muted">Items</th>
+                                    <th class="text-muted">Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Order history will be loaded here dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="~/js/customerview.js"></script>
+
+@* data range modal *@
+<!-- Custom Date Modal -->
+<div class="modal fade" id="customDateModal" tabindex="-1" aria-labelledby="addTaxModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addTaxModalLabel">Select Date Range</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body ">
+                <div class="row">
+                    <div class="col-12 col-md-6 form-floating">
+                        <input type="date" id="startDate" class="form-control" placeholder="Start Date">
+                        <label class="mx-2" for="fromDate">Start Date</label>
+                    </div>
+
+                    <div class="col-12 col-md-6 form-floating">
+                        <input type="date" id="endDate" class="form-control" placeholder="End Date">
+                        <label class="mx-2" for="fromDate">End Date</label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer d-flex justify-content-center">
+                <button type="button" id="applyDateRange" class="btn navbar-color text-white">Submit</button>
+                <button type="button" class="btn cancel-btn-color ms-1" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>

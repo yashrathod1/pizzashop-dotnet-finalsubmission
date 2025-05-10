@@ -1,0 +1,53 @@
+@* @model pizzashop_repository.ViewModels.MenuAppOrderSummaryViewModel
+
+
+<div class="d-flex flex-column" id="tax-summary">
+    <!-- Subtotal -->
+    <div class="d-flex justify-content-between">
+        <span class="fw-bold text-secondary fs-6">SubTotal</span>
+        <span class="fw-bold text-secondary fs-6">₹@Model.Subtotal.ToString("0.00")</span>
+    </div>
+
+    <!-- Tax List -->
+    @foreach (var tax in Model.Taxes)
+    {
+        decimal taxAmount = tax.Type == "Flat Amount"
+        ? tax.Value
+        : (Model.Subtotal * tax.Value) / 100;
+
+        <div class="d-flex justify-content-between tax-row align-items-center mb-1" data-tax-name="@tax.Name"
+            data-tax-id="@tax.Id">
+            <div>
+                @if (tax.IsEnable && !tax.IsDefault)
+                {
+                    <!-- Show Checkbox for Optional Taxes -->
+                    <input type="checkbox" class="form-check-input tax-checkbox me-2" data-rate="@tax.Value"
+                        data-type="@tax.Type" data-default="@tax.IsDefault.ToString().ToLower()" />
+                    <label>@tax.Name (@(tax.Type == "Flat Amount" ? $"₹{tax.Value}" : $"{tax.Value}%"))</label>
+                }
+                else if (tax.IsDefault)
+                {
+                    <label>@tax.Name (@(tax.Type == "Flat Amount" ? $"₹{tax.Value}" : $"{tax.Value}%"))</label>
+                }
+            </div>
+
+            <!-- Tax Amount Calculation -->
+            <span class="tax-amount" data-rate="@tax.Value" data-type="@tax.Type"
+                data-default="@tax.IsDefault.ToString().ToLower()">
+                ₹@((tax.IsDefault ? taxAmount : 0).ToString("F2"))
+            </span>
+        </div>
+    }
+
+    <!-- Total Tax -->
+    <div class="d-flex justify-content-between mt-2">
+        <span class="fw-bold">Tax Total</span>
+        <span id="tax-total" class="fw-bold"></span>
+    </div>
+
+    <!-- Grand Total -->
+    <div class="d-flex justify-content-between fw-bold mt-2 border-top pt-2">
+        <span>Grand Total</span>
+        <span id="grand-total">@Model.Total.ToString("0.00")</span>
+    </div>
+</div> *@

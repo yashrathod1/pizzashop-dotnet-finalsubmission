@@ -1,0 +1,42 @@
+@using pizzashop_repository.ViewModels
+@model List<WaitingTokenViewModel>
+
+<div class="d-flex justify-content-between">
+    <div class="blue-color h5">Waititng List</div>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+</div>
+<div class="table-responsive">
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col"></th>
+                <th scope="col text-muted">ID</th>
+                <th scope="col text-muted">Name</th>
+                <th scope="col text-muted">No. Of Persons</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Count > 0)
+            {
+                foreach (var token in Model)
+                {
+                    <tr>
+                        <td><input class="form-check-input selectedRadioBtn" data-token-id="@token.Id" type="radio"
+                                name="group1"></td>
+                        <td class="text-muted">#<strong>@token.Id</strong></td>
+                        <td class="text-muted"><strong>@token.Name</strong></td>
+                        <td class="text-muted"><strong>@token.NoOfPerson</strong></td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="4" class="text-center text-muted p-3">
+                        No Customers In Waiting List
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

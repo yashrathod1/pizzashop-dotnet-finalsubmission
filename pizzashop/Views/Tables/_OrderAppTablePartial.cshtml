@@ -1,0 +1,16 @@
+@* @model pizzashop_repository.ViewModels.TablesOrderAppViewModel
+
+@{
+    var timeSinceOrder = DateTime.Now - Model.Tables.Select(t => t.OrderTableTime).FirstOrDefault();
+    var placedTimeAgo = timeSinceOrder.TotalDays >= 1
+    ? $"{(int)timeSinceOrder.TotalDays} days ago"
+    : timeSinceOrder.TotalHours >= 1
+    ? $"{(int)timeSinceOrder.TotalHours} hours ago"
+    : timeSinceOrder.TotalMinutes >= 1
+    ? $"{(int)timeSinceOrder.TotalMinutes} min ago"
+    : "Just now";
+    var timeRemainingFormatted = $"{(int)timeSinceOrder.TotalDays} days {(int)timeSinceOrder.Hours}  hours {(int)timeSinceOrder.Minutes} min {(int)timeSinceOrder.Seconds} sec";
+}
+ *@
+
+

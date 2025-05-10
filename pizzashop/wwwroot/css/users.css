@@ -1,0 +1,288 @@
+body {
+    background-color: #f2f2f2;
+
+}
+
+.pizza-nav {
+    margin-left: 250px !important;
+}
+
+#main-content {
+    transition: none;
+    /* margin-left: 250px !important; */
+}
+
+.offcanvas.show~#main-content {
+    margin-left: 250px;
+}
+
+.offcanvas-backdrop.show {
+    background-color: transparent;
+}
+
+@media (max-width: 992px) {
+    .offcanvas.show~#main-content {
+        margin-left: 0;
+    }
+
+    .pizza-nav {
+        margin-left: 0 !important;
+    }
+
+}
+
+@media (min-width: 992px) {
+    .navbar-pf {
+        display: flex;
+        justify-content: end !important;
+    }
+
+    #main-content {
+        transition: none;
+        margin-left: 250px !important;
+    }
+
+}
+
+
+/* .modal-backdrop.show {
+    opacity: 0;
+    width: 0;
+} */
+
+.modal-footer {
+    border-top: none;
+}
+
+.navbar-color {
+    background-color: #0066a7 !important;
+}
+
+.shop-logo {
+    height: 90px !important;
+}
+
+.pfp-size {
+    height: 40px;
+}
+
+.pizzasidebar {
+    width: 250px !important;
+    background-color: #ffffff;
+    transition: none;
+}
+
+/* .offcanvas-body.offcanvas-header{
+    width: 300px;
+} */
+.shop-name {
+    color: #0568a8;
+}
+
+/* .modal-backdrop.show {
+    opacity: 0;
+} */
+
+.sidebar-name {
+    color: #7e8696;
+}
+
+.dashboard-icon {
+    width: 20px;
+    height: 20px;
+}
+
+.permission-name {
+    color: #7e8696;
+}
+
+.white-icon {
+    color: #7e8696 !important;
+}
+
+.sidebarlist-hover:hover {
+    background-color: #e9eaeb;
+}
+
+.selected-nav {
+    background-color: #e9eaeb !important;
+    color: #0066a7 !important;
+}
+
+.selected-nav .sidebar-name {
+    color: #0066a7;
+}
+
+.selected-nav>.nav-link>div>div>img {
+    filter: brightness(0) saturate(100%) invert(20%) sepia(89%) saturate(2371%) hue-rotate(186deg) brightness(96%) contrast(102%);
+}
+
+.blue-color {
+    color: #0066a7;
+}
+
+.back-btn {
+    /* border-color: #0066a7; */
+    border-radius: 10%;
+    text-decoration: none;
+
+}
+
+.new-user-input {
+    height: 55px;
+}
+
+.btn-upload {
+    border: 1px dashed #7e8696;
+    height: 95px;
+    background-color: white;
+}
+
+.cancel-btn-color {
+    background-color: white;
+    border: 1px solid #0066a7;
+    color: #0066a7;
+
+}
+
+.user-box {
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.12), 0 1px 4px rgba(0, 0, 0, 0.24);
+}
+
+.active-btn {
+    background-color: rgb(13, 126, 13);
+    color: white;
+    border-radius: 40%;
+    text-align: center;
+    width: 50px;
+}
+
+/* delete */
+
+.user-delete-btn {
+    border: none;
+    background-color: white;
+}
+
+.warning-img {
+    width: 40px;
+    height: 40px;
+
+}
+
+/* pemission */
+
+
+.permission-row {
+    height: 50px;
+}
+
+.userlist-row {
+    height: 50px;
+}
+
+.custom-switch {
+    width: 50px !important;
+    height: 25px;
+}
+
+.form-check-input:checked {
+    background-color: #0066a7;
+    border-color: #0066a7;
+}
+
+/* input field focus remove */
+
+.form-control:focus {
+
+    border-color: #ced4da !important;
+    box-shadow: none !important;
+}
+
+
+.form-select:focus {
+
+    border-color: #ced4da !important;
+    box-shadow: none !important;
+}
+
+.search-input {
+    padding-left: 35px;
+    border-radius: 5px;
+}
+
+.search-icon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: gray;
+    margin-left: 190px;
+    padding-bottom: 15px;
+}
+
+
+.sort-icons {
+    display: inline-flex;
+    align-items: center;
+    margin-left: 5px;
+    font-size: 14px;
+    color: gray;
+}
+
+
+.sort-icons .asc,
+.sort-icons .desc {
+    margin: 0 2px;
+    opacity: 0.5;
+}
+
+
+.sort-icons .active {
+    opacity: 1;
+    font-weight: bold;
+    color: black;
+}
+
+.sort-link {
+    text-decoration: none !important;
+    color: black !important;
+    font-weight: bold;
+}
+
+
+.sort-link:hover {
+    color: #333 !important;
+}
+
+
+.sort-link:focus,
+.sort-link:active {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+/* default eye remove */
+
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+    display: none !important;
+}
+
+
+/* orderapp layout css */
+
+
+.btn:hover { 
+    text-decoration: none;
+}
+
+.custom-blue-border {
+    border: 2px solid #0066a7 !important;
+    border-radius: 5px;
+}
+
+.bg-remove-btn{
+    background: none !important;
+    border: none !important;
+}
