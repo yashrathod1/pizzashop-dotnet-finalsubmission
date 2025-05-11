@@ -24,31 +24,13 @@ public class MenuController : Controller
         RolePermissionViewModel? permission = await PermissionHelper.GetPermissionsAsync(HttpContext, "Menu");
         ViewBag.Permissions = permission;
 
-        // List<CategoryViewModel>? categories = await _menuService.GetCategoriesAsync();
-
-        // categories = categories.OrderBy(c => c.Id).ToList();
-
-        // List<ItemViewModel>? items = await _menuService.GetItemsAsync();
-
-        // items = items.OrderBy(i => i.Id).ToList();
-
         List<ModifierGroupViewModel>? modifierGroup = await _menuService.GetModifierGroupAsync();
 
         modifierGroup = modifierGroup.OrderBy(mg => mg.Id).ToList();
 
-        // List<ModifierViewModel>? modifiers = await _menuService.GetModifiersAsync();
-
-        // modifiers = modifiers.OrderBy(m => m.Id).ToList();
-
-        // Task<List<ModifierViewModel>>? pageModifiers = _menuService.GetModifiersAsync();
-
         MenuItemViewModel? viewmodel = new MenuItemViewModel
         {
-            // Categories = categories,
-            // Items = items,
             ModifierGroup = modifierGroup
-            // Modifiers = modifiers,
-
         };
 
         return View(viewmodel);
@@ -149,7 +131,7 @@ public class MenuController : Controller
     public async Task<IActionResult> DeleteCategory([FromBody] CategoryDeleteViewModel request)
     {
         bool result = await _menuService.SoftDeleteCategoryAsync(request.Id);
-        return result ? Ok(new { success = true }) : BadRequest(new { success = false });
+        return result ? Ok(new { success = true }) : Json(new { success = false });
     }
 
 
@@ -200,7 +182,6 @@ public class MenuController : Controller
                 var errors = ModelState[key].Errors;
                 foreach (var error in errors)
                 {
-                    // Log, return, or collect errors as needed
                     Console.WriteLine($"Field: {key}, Error: {error.ErrorMessage}");
                 }
             }

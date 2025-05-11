@@ -18,9 +18,9 @@ public interface IUserService
     string ExtractEmailFromToken(string token);
 
     string GeneratePasswordResetToken(string email);
-    UserTableViewModel? GetUserProfile(string email);
+    ProfileViewModel? GetUserProfile(string email);
 
-    bool UpdateUserProfile(string email, UserTableViewModel model);
+    bool UpdateUserProfile(string email, ProfileViewModel model);
 
     string? ChangePassword(string email, ChangePasswordViewModel model);
 
@@ -39,6 +39,6 @@ public interface IUserService
 
     Task<bool> UpdateRolePermissionsAsync(List<RolePermissionViewModel> permissions);
 
-    Task<DashboardViewModel> GetDashboardDataAsync(string filter);
+    Task<DashboardViewModel> GetDashboardDataAsync(string filter,DateTime? customStartDate = null, DateTime? customEndDate = null);
 
 }

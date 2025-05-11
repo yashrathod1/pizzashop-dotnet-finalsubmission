@@ -1,4 +1,4 @@
- $(document).ready(function () {
+    $(document).ready(function () {
       $("#forgotPasswordLink").click(function () {
         var email = $("#email").val();
         $(this).attr("href", '@Url.Action("ForgotPassword", "Auth")' + '?Email=' + encodeURIComponent(email));
@@ -13,5 +13,3 @@
         $(this).toggleClass('fa-eye-slash');
       });
     });
-
-

@@ -21,5 +21,9 @@
 }
 
 .chart {
-    width: 100% !important;
+    position: relative;
+    height: 200px; /* Adjust this value as needed */
+    width: 100%;
 }
+
+

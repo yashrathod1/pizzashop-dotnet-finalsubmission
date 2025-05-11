@@ -12,6 +12,8 @@ public class DashboardViewModel
     public List<TopItem>? LeastSellingItems { get; set; }
     public int WaitingListCount { get; set; }
     public int NewCustomer { get; set; }
+
+    public string Filter { get; set; }
 }
 public class ChartDataPoint
 {

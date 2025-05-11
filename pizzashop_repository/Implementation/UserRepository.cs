@@ -251,96 +251,34 @@ public class UserRepository : IUserRepository
 
 
 
-    public async Task<DashboardViewModel> GetDashboardDataAsync(string filter)
+    public async Task<List<Order>> GetOrdersInRangeAsync(DateTime start, DateTime end)
     {
-        DateTime startDate, endDate;
-        var today = DateTime.Today;
-        switch (filter)
-        {
-            case "Today":
-                startDate = today;
-                endDate = today.AddDays(1);
-                break;
-            case "Last 7 Days":
-                startDate = today.AddDays(-6);
-                endDate = today.AddDays(1);
-                break;
-            case "Last 30 Days":
-                startDate = today.AddDays(-29);
-                endDate = today.AddDays(1);
-                break;
-            case "Current Month":
-                startDate = new DateTime(today.Year, today.Month, 1);
-                endDate = startDate.AddMonths(1);
-                break;
-            default:
-                startDate = new DateTime(today.Year, today.Month, 1);
-                endDate = startDate.AddMonths(1);
-                break;
-        }
-        var ordersInRange = await _context.Orders
-            .Where(o => o.Createdat >= startDate && o.Createdat < endDate)
+        return await _context.Orders
+            .Where(o => o.Createdat >= start && o.Createdat < end)
             .ToListAsync();
-        var totalSales = ordersInRange.Sum(o => o.Totalamount);
-        var totalOrders = ordersInRange.Count;
-        var avgOrderValue = Math.Round(totalOrders > 0 ? totalSales / totalOrders : 0, 2);
+    }
 
-        var servedDetails = await _context.OrderItemsMappings
-                                            .Include(od => od.Order)
-                                            .Where(od =>
-                                            od.Order != null &&
-                                            od.Order.Createdat >= startDate &&
-                                            od.Order.Createdat < endDate)
-                                            .ToListAsync();
+    public async Task<List<OrderItemsMapping>> GetServedItemsAsync(DateTime start, DateTime end)
+    {
+        return await _context.OrderItemsMappings
+            .Include(od => od.Order)
+            .Where(od => od.Order != null && od.Order.Createdat >= start && od.Order.Createdat < end)
+            .ToListAsync();
+    }
 
+    public async Task<List<(DateTime Date, int Count)>> GetDailyCustomerCountsAsync(DateTime start, DateTime end)
+    {
+        return await _context.Customers
+            .Where(c => c.Createdat >= start && c.Createdat < end)
+            .GroupBy(c => c.Createdat.Date)
+            .Select(g => new ValueTuple<DateTime, int>(g.Key, g.Count()))
+            .ToListAsync();
+    }
 
-        var revenueChart = ordersInRange
-            .GroupBy(o => o.Createdat.Date)
-            .Select(g => new ChartDataPoint
-            {
-                Label = g.Key.ToString("MMM dd"),
-                Value = g.Sum(o => o.Totalamount)
-            })
-            .OrderBy(g => g.Label)
-            .ToList();
-
-        // var customerGrowth = _context.Customers
-        //     .Where(c => c.Createdat >= startDate && c.Createdat < endDate)
-        //     .GroupBy(c => c.Createdat.Date)
-        //     .AsEnumerable()
-        //     .Select(g => new ChartDataPoint
-        //     {
-        //         Label = g.Key.ToString("MMM dd"),
-        //         Value = g.Count()
-        //     })
-        //     .OrderBy(e => e.Label)
-        //     .ToList();
-
-        var dailyCounts = _context.Customers
-                           .Where(c => c.Createdat >= startDate && c.Createdat < endDate)
-                           .GroupBy(c => c.Createdat.Date)
-                           .Select(g => new
-                           {
-                               Date = g.Key,
-                               Count = g.Count()
-                           })
-                           .OrderBy(x => x.Date)
-                           .ToList();
-
-        var cumulativeList = new List<ChartDataPoint>();
-        int runningTotal = 0;
-        foreach (var item in dailyCounts)
-        {
-            runningTotal += item.Count;
-            cumulativeList.Add(new ChartDataPoint
-            {
-                Label = item.Date.ToString("MMM dd"),
-                Value = runningTotal
-            });
-        }
-
-        var topItems = await _context.OrderItemsMappings
-            .Where(od => od.Order.Createdat >= startDate && od.Order.Createdat < endDate)
+    public async Task<List<TopItem>> GetTopItemsAsync(DateTime start, DateTime end)
+    {
+        return await _context.OrderItemsMappings.Include(od => od.Order)
+            .Where(od => od.Order.Createdat >= start && od.Order.Createdat < end  && od.Order.Status != "Cancalled")
             .GroupBy(od => od.ItemName)
             .OrderByDescending(g => g.Sum(od => od.Quantity))
             .Take(5)
@@ -351,9 +289,12 @@ public class UserRepository : IUserRepository
                 ImageUrl = "/images/dining-menu.png"
             })
             .ToListAsync();
+    }
 
-        var leastItems = await _context.OrderItemsMappings
-            .Where(od => od.Order.Createdat >= startDate && od.Order.Createdat < endDate)
+    public async Task<List<TopItem>> GetLeastItemsAsync(DateTime start, DateTime end)
+    {
+        return await _context.OrderItemsMappings.Include(od => od.Order)
+            .Where(od => od.Order.Createdat >= start && od.Order.Createdat < end  && od.Order.Status != "Cancalled")
             .GroupBy(od => od.ItemName)
             .OrderBy(g => g.Sum(od => od.Quantity))
             .Take(5)
@@ -364,35 +305,28 @@ public class UserRepository : IUserRepository
                 ImageUrl = "/images/dining-menu.png"
             })
             .ToListAsync();
-
-
-        var servedOrders = await _context.Orders
-                                        .Where(o => o.Servingtime != null)
-                                        .Select(o => new { o.Createdat, o.Servingtime })
-                                        .ToListAsync();
-
-        var waitTimeMinutes = servedOrders
-            .Select(o => (o.Servingtime.Value - o.Createdat).TotalMinutes)
-            .ToList();
-
-        var avgWaitTimeMinutes = waitTimeMinutes.Any() ? waitTimeMinutes.Average() : 0;
-
-        double roundedAvgWaitTime = Math.Round(avgWaitTimeMinutes, 1);
-
-        var waitingCount = await _context.WaitingTokens.Where(w => !w.IsAssign && !w.Isdeleted).CountAsync();
-        var NewCustomer = await _context.Customers.Where(cs => cs.Createdat >= startDate && cs.Createdat < endDate).CountAsync();
-        return new DashboardViewModel
-        {
-            TotalSales = totalSales,
-            TotalOrders = totalOrders,
-            AverageOrderValue = avgOrderValue,
-            RevenueChartData = revenueChart,
-            CustomerGrowthData = cumulativeList,
-            TopSellingItems = topItems,
-            LeastSellingItems = leastItems,
-            AverageWaitingTime = roundedAvgWaitTime,
-            WaitingListCount = waitingCount,
-            NewCustomer = NewCustomer
-        };
     }
+
+    public async Task<List<(DateTime Createdat, DateTime? Servingtime)>> GetServedOrdersAsync(DateTime start, DateTime end)
+    {
+        return await _context.Orders
+            .Where(o => o.Servingtime != null && o.Createdat >= start && o.Createdat < end)
+            .Select(o => new ValueTuple<DateTime, DateTime?>(o.Createdat, o.Servingtime))
+            .ToListAsync();
+    }
+
+    public async Task<int> GetWaitingCountAsync(DateTime start, DateTime end)
+    {
+        return await _context.WaitingTokens
+            .Where(w => !w.IsAssign && !w.Isdeleted && w.Createdat >= start && w.Createdat < end)
+            .CountAsync();
+    }
+
+    public async Task<int> GetNewCustomerCountAsync(DateTime start, DateTime end)
+    {
+        return await _context.Customers
+            .Where(c => c.Createdat >= start && c.Createdat < end)
+            .CountAsync();
+    }
+
 }

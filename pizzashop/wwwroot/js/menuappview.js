@@ -213,6 +213,12 @@ function checkMinSelection() {
 
 // add order of item and modifier
 $(document).on('click', '#AddToOrder', function () {
+    var orderId = parseInt(getOrderIdFromUrl());
+
+    if (!orderId || orderId == 0) {
+        toastr.warning("Please create an order before adding items.");
+        return;
+    }
     var itemId = $('#itemTitle').data('item-id');
     var availableQty = parseInt($('#itemTitle').data('available-qty'));
     var selectedModifierIds = [];
@@ -261,7 +267,7 @@ $(document).on('click', '#AddToOrder', function () {
 
 function updateAmounts($row, quantity) {
     var baseItemAmount = parseFloat($row.find('.item-amount').data('base-amount'));
-    var baseModifierAmount = parseFloat($row.find('.totalmodifier-amount').data('base-amount'));
+    var baseModifierAmount = parseFloat($row.find('.modifier-amount').data('mamount'));
 
     var totalItemAmount = baseItemAmount * quantity;
     var totalModifierAmount = baseModifierAmount * quantity;
@@ -290,6 +296,7 @@ $(document).on('click', '.positive', function () {
         $valueSpan.text(currentQty);
         updateAmounts($row, currentQty);
         calculateAndRenderTaxSummary();
+        $('#saveBtn').prop('disabled', false);
     } else {
         toastr.warning(`You cannot select more quantity than available quantity ${availableQty}!`);
     }
@@ -306,6 +313,7 @@ $(document).on('click', '.negative', function () {
         var $row = $(this).closest('tr');
         updateAmounts($row, quantity);
         calculateAndRenderTaxSummary();
+        $('#saveBtn').prop('disabled', false);
     }
 });
 
@@ -322,13 +330,22 @@ function calculateSubTotal() {
 
     $('#orderedItemsList .order-row').each(function () {
         let itemAmount = parseFloat($(this).find('.item-amount').data('base-amount'));
-        let modifierAmount = parseFloat($(this).find('.totalmodifier-amount').data('base-amount'));
         let quantity = parseInt($(this).find('.value').text());
 
+        let modifierAmount = 0;
+
+        $(this).find('.modifier-info').each(function () {
+            let currentModifierAmount = parseFloat($(this).find('.modifier-amount').data('mamount'));
+            if (!isNaN(currentModifierAmount)) {
+                modifierAmount += currentModifierAmount; 
+            }
+        });
+
         if (!isNaN(itemAmount) && !isNaN(modifierAmount) && !isNaN(quantity)) {
-            subTotal += (itemAmount + modifierAmount) * quantity;
+            subTotal += (itemAmount + modifierAmount) * quantity; 
         }
     });
+
 
     return subTotal;
 }
@@ -390,41 +407,7 @@ $(document).on('click', '#saveBtn', function () {
         taxes: [],
         paymentMethod: paymentMethod
     };
-    $('.order-row').each(function () {
-        var $row = $(this);
-        var itemId = $row.data('item-id');
-        var itemName = $row.find('.item-name').data('iname');
-        var quantity = parseInt($row.find('.quantity-input').text()) || 1;
-        var itemAmount = parseFloat($row.find('.item-amount').text().replace('₹', '')) || 0;
-        var modifierAmount = parseFloat($row.find('.totalmodifier-amount').text().replace('₹', '')) || 0;
 
-        var modifiers = [];
-        $row.find('.accordion-body li').each(function () {
-            var $mod = $(this);
-            var modName = $mod.find('.modifier-name').data('mname');
-            var modAmount = parseFloat($mod.find('.modifier-amount').data('mamount')) || 0;
-            var modQuantity = parseFloat($mod.find('.modifier-info').data('modifier-qty')) || 0;
-            var modId = parseFloat($mod.find('.modifier-info').data('modifier-id')) || 0;
-
-            modifiers.push({
-                Id: modId,
-                Name: modName,
-                Amount: modAmount,
-                Quantity: modQuantity
-            });
-        });
-        console.log("modifier for item", itemName, modifiers)
-
-        orderData.items.push({
-            Id: itemId,
-            itemName: itemName,
-            ItemQuantity: quantity,
-            itemAmount: itemAmount,
-            SelectedModifiers: modifiers
-        });
-
-        orderData.subtotal += (itemAmount + modifierAmount) * quantity;
-    });
 
     $('.tax-row').each(function () {
         var $tax = $(this);
@@ -444,8 +427,6 @@ $(document).on('click', '#saveBtn', function () {
     });
 
     orderData.total += orderData.subtotal;
-
-    console.log("data is", orderData);
 
     $.ajax({
         url: '/MenuApp/SaveOrder',
@@ -639,18 +620,15 @@ $(document).on('click', '.order-item-detail', function (e) {
 
         type: "GET",
         url: "/MenuApp/GetItemInstructionById",
-        data: { orderItemId : itemId, orderId : orderId },
+        data: { orderItemId: itemId, orderId: orderId },
         success: function (orderItem) {
-            console.log("orderitem is", orderItem);
-            console.log("itemId is", orderItem.itemId);
-         
             if (orderItem) {
                 $('#InstructionText').val(orderItem.instruction);
                 $('#instructionItemId').val(orderItem.itemId);
                 $('#SpecialInstruction').modal('show');
             }
         },
-         
+
         error: function () {
             toastr.error("Error in Getting OrderComment")
         }
@@ -662,9 +640,9 @@ $('#saveInstructionBtn').on('click', function () {
 
     var formData = {
 
-        ItemId : $('#instructionItemId').val(),
-        Instruction : $('#InstructionText').val(),
-        OrderId : $('#orderId').val()
+        ItemId: $('#instructionItemId').val(),
+        Instruction: $('#InstructionText').val(),
+        OrderId: $('#orderId').val()
     }
 
     $.ajax({
@@ -799,3 +777,22 @@ $(document).on('click', '#cancelOrderBtn', function () {
 
 // qr code
 
+function generateQRCode() {
+    debugger
+
+    $('#qr-code').empty();
+
+    const currentUrl = window.location.href;
+
+    new QRCode('qr-code', {
+        text: currentUrl,
+        width: 200,
+        height: 200,
+        colorDark: '#000000',
+        colorLight: '#ffffff',
+        correctLevel: QRCode.CorrectLevel.H
+    });
+
+    // @* $('#qr-code-modal').css('display', 'flex'); * @
+    $('#MenuQR').modal('show');
+}

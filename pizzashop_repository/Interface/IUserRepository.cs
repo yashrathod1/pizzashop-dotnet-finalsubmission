@@ -38,7 +38,21 @@ public interface IUserRepository
 
     Task UpdateRolePermissionAsync(Roleandpermission rolePermission);
 
-    Task<DashboardViewModel> GetDashboardDataAsync(string filter);
+    Task<List<Order>> GetOrdersInRangeAsync(DateTime start, DateTime end);
+
+    Task<List<OrderItemsMapping>> GetServedItemsAsync(DateTime start, DateTime end);
+
+    Task<List<(DateTime Date, int Count)>> GetDailyCustomerCountsAsync(DateTime start, DateTime end);
+
+    Task<List<TopItem>> GetTopItemsAsync(DateTime start, DateTime end);
+
+    Task<List<TopItem>> GetLeastItemsAsync(DateTime start, DateTime end);
+
+    Task<List<(DateTime Createdat, DateTime? Servingtime)>> GetServedOrdersAsync(DateTime start, DateTime end);
+
+    Task<int> GetWaitingCountAsync(DateTime start, DateTime end);
+
+    Task<int> GetNewCustomerCountAsync(DateTime start, DateTime end);
 
 }
 

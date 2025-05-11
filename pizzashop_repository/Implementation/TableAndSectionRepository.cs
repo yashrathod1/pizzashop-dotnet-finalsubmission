@@ -84,7 +84,7 @@ public class TableAndSectionRepository : ITableAndSectionRepository
     }
 
     public async Task<bool> UpdateSectionAsync(SectionsViewModal section)
-    {   
+    {
         Section? existingSection = await _context.Sections.FindAsync(section.Id);
         if (existingSection == null) return false;
 
@@ -99,9 +99,19 @@ public class TableAndSectionRepository : ITableAndSectionRepository
         Section? section = await _context.Sections.FindAsync(id);
         if (section == null) return false;
 
+        var tablesInSection = await _context.Tables
+            .Where(t => t.Sectionid == id && !t.Isdeleted)
+            .ToListAsync();
+
+        if (tablesInSection.Count > 1 && tablesInSection.Any(t => t.Status != "Available"))
+        {
+            return false;
+        }
+
         section.Isdeleted = true;
         return await _context.SaveChangesAsync() > 0;
     }
+
 
     public async Task<bool> AddTableAsync(Table table)
     {
@@ -147,17 +157,30 @@ public class TableAndSectionRepository : ITableAndSectionRepository
         Table? table = await _context.Tables.FindAsync(id);
         if (table == null) return false;
 
+        if (table.Status != "Available")
+        {
+            return false;
+        }
+
         table.Isdeleted = true;
         return await _context.SaveChangesAsync() > 0;
     }
 
+
+    public List<Table> GetTablesByIds(List<int> tableIds)
+    {
+        return _context.Tables.Where(t => tableIds.Contains(t.Id)).ToList();
+    }
+
     public void SoftDeleteTablesAsync(List<int> tableIds)
     {
-        List<Table>? tables = _context.Tables.Where(x => tableIds.Contains(x.Id)).ToList();
-        foreach (Table? table in tables)
+        var tables = _context.Tables.Where(x => tableIds.Contains(x.Id)).ToList();
+        foreach (var table in tables)
         {
             table.Isdeleted = true;
         }
         _context.SaveChanges();
     }
+
+
 }

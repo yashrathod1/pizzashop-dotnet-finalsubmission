@@ -170,7 +170,7 @@ public class UserService : IUserService
         }
     }
 
-    public UserTableViewModel? GetUserProfile(string email)
+    public ProfileViewModel? GetUserProfile(string email)
     {
         try
         {
@@ -181,7 +181,7 @@ public class UserService : IUserService
             if (user == null)
                 return null;
 
-            return new UserTableViewModel
+            return new ProfileViewModel
             {
                 Firstname = user.Firstname,
                 Lastname = user.Lastname,
@@ -203,7 +203,7 @@ public class UserService : IUserService
         }
     }
 
-    public bool UpdateUserProfile(string email, UserTableViewModel model)
+    public bool UpdateUserProfile(string email, ProfileViewModel model)
     {
         try
         {
@@ -228,7 +228,7 @@ public class UserService : IUserService
                 string uniqueFileName = Guid.NewGuid().ToString() + "_" + model.ProfileImage.FileName;
                 string filePath = Path.Combine(uploadsFolder, uniqueFileName);
 
-                using (FileStream? fileStream = new FileStream(filePath, FileMode.Create))
+                using (FileStream? fileStream = new(filePath, FileMode.Create))
                 {
                     model.ProfileImage.CopyTo(fileStream);
                 }
@@ -613,9 +613,96 @@ public class UserService : IUserService
         }
     }
 
-    public async Task<DashboardViewModel> GetDashboardDataAsync(string filter)
+    public async Task<DashboardViewModel> GetDashboardDataAsync(string filter,DateTime? customStartDate = null, DateTime? customEndDate = null)
     {
-        return await _userRepository.GetDashboardDataAsync(filter);
+        DateTime startDate, endDate;
+        var today = DateTime.Today;
+
+        if (filter == "Custom" && customStartDate.HasValue && customEndDate.HasValue)
+        {
+            startDate = customStartDate.Value.Date;
+            endDate = customEndDate.Value.Date.AddDays(1); 
+        }
+        else
+        {
+            switch (filter)
+            {
+                case "Today":
+                    startDate = today;
+                    endDate = today.AddDays(1);
+                    break;
+                case "Last 7 Days":
+                    startDate = today.AddDays(-6);
+                    endDate = today.AddDays(1);
+                    break;
+                case "Last 30 Days":
+                    startDate = today.AddDays(-29);
+                    endDate = today.AddDays(1);
+                    break;
+                case "Current Month":
+                default:
+                    startDate = new DateTime(today.Year, today.Month, 1);
+                    endDate = startDate.AddMonths(1);
+                    break;
+            }
+        }
+
+        var ordersInRange = await _userRepository.GetOrdersInRangeAsync(startDate, endDate);
+        var servedItems = await _userRepository.GetServedItemsAsync(startDate, endDate);
+        var dailyCustomerCounts = await _userRepository.GetDailyCustomerCountsAsync(startDate, endDate);
+        var topItems = await _userRepository.GetTopItemsAsync(startDate, endDate);
+        var leastItems = await _userRepository.GetLeastItemsAsync(startDate, endDate);
+        var servedOrders = await _userRepository.GetServedOrdersAsync(startDate, endDate);
+        var waitingCount = await _userRepository.GetWaitingCountAsync(startDate, endDate);
+        var newCustomer = await _userRepository.GetNewCustomerCountAsync(startDate, endDate);
+
+        // Aggregations
+        var totalSales = ordersInRange.Where(o => o.Status != "Cancalled").Sum(o => o.Totalamount);
+        var totalOrders = ordersInRange.Count;
+        var avgOrderValue = Math.Round(totalOrders > 0 ? totalSales / totalOrders : 0, 2);
+
+        var revenueChart = ordersInRange
+            .GroupBy(o => o.Createdat.Date)
+            .Select(g => new ChartDataPoint
+            {
+                Label = g.Key.ToString("MMM dd"),
+                Value = g.Sum(o => o.Totalamount)
+            })
+            .OrderBy(g => g.Label)
+            .ToList();
+
+        var cumulativeList = new List<ChartDataPoint>();
+        int runningTotal = 0;
+        foreach (var (Date, Count) in dailyCustomerCounts)
+        {
+            runningTotal += Count;
+            cumulativeList.Add(new ChartDataPoint
+            {
+                Label = Date.ToString("MMM dd"),
+                Value = runningTotal
+            });
+        }
+
+        var waitTimeMinutes = servedOrders
+            .Select(o => (o.Servingtime.Value - o.Createdat).TotalMinutes)
+            .ToList();
+
+        var avgWaitTime = waitTimeMinutes.Any() ? Math.Round(waitTimeMinutes.Average(), 1) : 0;
+
+        return new DashboardViewModel
+        {
+            TotalSales = totalSales,
+            TotalOrders = totalOrders,
+            AverageOrderValue = avgOrderValue,
+            RevenueChartData = revenueChart,
+            CustomerGrowthData = cumulativeList,
+            TopSellingItems = topItems,
+            LeastSellingItems = leastItems,
+            AverageWaitingTime = avgWaitTime,
+            WaitingListCount = waitingCount,
+            NewCustomer = newCustomer
+        };
     }
+
 
 }

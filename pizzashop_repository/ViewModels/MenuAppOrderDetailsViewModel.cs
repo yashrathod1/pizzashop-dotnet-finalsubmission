@@ -26,6 +26,8 @@ public class MenuAppOrderItemViewModel
 
     public int ItemQuantity { get; set; }
 
+    public decimal UnitPrice { get; set; }
+
     public decimal TotalModifierAmount { get; set; }
 
     public List<MenuAppModifierViewModel> SelectedModifiers { get; set; } = new();

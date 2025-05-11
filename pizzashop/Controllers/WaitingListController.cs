@@ -23,7 +23,7 @@ public class WaitingListController : Controller
     [HttpGet]
     public async Task<IActionResult> GetSections()
     {
-        var sections = await _waitingListService.GetAllSectionsAsync();
+        List<OrderAppSectionViewModel>? sections = await _waitingListService.GetAllSectionsAsync();
         return Json(sections);
     }
 
@@ -56,14 +56,14 @@ public class WaitingListController : Controller
 
     public async Task<IActionResult> GetCustomerByEmail(string email)
     {
-        var customer = await _waitingListService.GetCustomerByEmail(email);
+        CustomerViewModel? customer = await _waitingListService.GetCustomerByEmail(email);
         return Json(customer);
     }
 
     [HttpGet]
     public async Task<IActionResult> GetTokenById(int id)
     {
-        var model = await _waitingListService.GetTokenByIdAsync(id);
+        WaitingListItemViewModel? model = await _waitingListService.GetTokenByIdAsync(id);
         if (model != null)
         {
             return Json(model);
@@ -118,20 +118,20 @@ public class WaitingListController : Controller
     [HttpGet]
     public async Task<IActionResult> GetAvailableSectionsAsync()
     {
-        var sections = await _waitingListService.GetSectionsWithAvailableTablesAsync();
+        List<SectionsViewModal>? sections = await _waitingListService.GetSectionsWithAvailableTablesAsync();
         return Json(sections);
     }
     [HttpGet]
     public async Task<IActionResult> GetAvailableTablesAsync(int sectionId)
     {
-        var tables = await _waitingListService.GetAvailableTablesBySectionAsync(sectionId);
+        List<TableViewModel>? tables = await _waitingListService.GetAvailableTablesBySectionAsync(sectionId);
         return Json(tables);
     }
 
     [HttpPost]
     public async Task<IActionResult> AssignTables([FromBody] AssignTableInWaitingTokenViewModel model)
     {
-        var result = await _waitingListService.AssignTablesToCustomerAsync(model);
+        AssignTableResultViewModel? result = await _waitingListService.AssignTablesToCustomerAsync(model);
 
         return Json(new
         {

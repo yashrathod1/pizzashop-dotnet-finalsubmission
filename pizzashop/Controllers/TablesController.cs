@@ -16,14 +16,14 @@ public class TablesController : Controller
     public async Task<IActionResult> Index()
     {
         ViewBag.ActiveNav = "Tables";
-        var sectionandtable = await _tableService.GetSectionsWithTablesAsync();
+        TablesOrderAppViewModel? sectionandtable = await _tableService.GetSectionsWithTablesAsync();
         return View(sectionandtable);
     }
 
     [HttpGet]
     public async Task<IActionResult> GetSections()
     {
-        var sections = await _tableService.GetAllSectionsAsync();
+        List<OrderAppSectionViewModel>? sections = await _tableService.GetAllSectionsAsync();
         return Json(sections);
     }
 
@@ -35,7 +35,7 @@ public class TablesController : Controller
             return Json("Invalid data.");
         }
 
-        var result = await _tableService.AddWaitingTokenAsync(waitingTokenVm);
+        bool result = await _tableService.AddWaitingTokenAsync(waitingTokenVm);
 
         if (result)
         {
@@ -51,20 +51,20 @@ public class TablesController : Controller
     [HttpGet]
     public async Task<IActionResult> GetWaitingTokenList(int sectionId)
     {
-        var waitingTokens = await _tableService.GetWaitingTokens(sectionId);
+        List<WaitingTokenViewModel>? waitingTokens = await _tableService.GetWaitingTokens(sectionId);
         return PartialView("_TableWaitingListPartial", waitingTokens);
     }
 
     [HttpGet]
     public async Task<IActionResult> GetCustomerDetailsByToken(int tokenId)
     {
-        var customerDetails = await _tableService.GetCustomerDetailsByToken(tokenId);
+        WaitingTokenViewModel? customerDetails = await _tableService.GetCustomerDetailsByToken(tokenId);
         return Json(customerDetails);
     }
 
     public async Task<IActionResult> GetCustomerByEmail(string email)
     {
-        var customer = await _tableService.GetCustomerByEmail(email);
+        CustomerViewModel? customer = await _tableService.GetCustomerByEmail(email);
         return Json(customer);
     }
 
@@ -85,8 +85,8 @@ public class TablesController : Controller
     [HttpGet]
     public async Task<IActionResult> GetOrderIdByTable(int tableId)
     {
-        var orderId = await _tableService.GetOrderIdByTableIdAsync(tableId);
-       return Json(orderId);
+        int? orderId = await _tableService.GetOrderIdByTableIdAsync(tableId);
+        return Json(orderId);
     }
 
 

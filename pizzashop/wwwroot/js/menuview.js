@@ -16,6 +16,43 @@ $(document).ready(function () {
             addCategory();
         }
     });
+
+    $('#categoryModal').on('hidden.bs.modal', function () {
+        $(this).find('input[type="text"], input[type="email"], input[type="hidden"], textarea').val('');
+        $(this).find('span.text-danger').text('');
+    });
+
+
+    $('#addMenuItemModal').on('hidden.bs.modal', function () {
+        $(this).find('input[type="text"], input[type="email"], input[type="hidden"], textarea').val('');
+        $(this).find('span.text-danger').text('');
+    });
+
+    $('#EditItemModal').on('hidden.bs.modal', function () {
+        $(this).find('input[type="text"], input[type="email"], input[type="hidden"], textarea').val('');
+        $(this).find('span.text-danger').text('');
+    });
+
+    $('#addModifierGroup').on('hidden.bs.modal', function () {
+        $(this).find('input[type="text"], input[type="email"], input[type="hidden"], textarea').val('');
+        $(this).find('span.text-danger').text('');
+    });
+
+    $('#EditModifierGroupModal').on('hidden.bs.modal', function () {
+        $(this).find('input[type="text"], input[type="email"], input[type="hidden"], textarea').val('');
+        $(this).find('span.text-danger').text('');
+    });
+
+    $('#addModifierModal').on('hidden.bs.modal', function () {
+        $(this).find('input[type="text"], input[type="email"], input[type="hidden"], textarea').val('');
+        $(this).find('span.text-danger').text('');
+    });
+
+    $('#EditModifiersModal').on('hidden.bs.modal', function () {
+        $(this).find('input[type="text"], input[type="email"], input[type="hidden"], textarea').val('');
+        $(this).find('span.text-danger').text('');
+    });
+
 });
 
 
@@ -142,7 +179,7 @@ function deleteCategory(categoryId) {
                 toastr.success("Category deleted successfully");
                 loadCategories();
             } else {
-                toastr.error("Failed to delete category");
+                toastr.error("Category cannot be deleted. It is used in an active order.");
             }
         },
         error: function () {
@@ -166,7 +203,7 @@ $(document).on("click", ".category-item", function (event) {
 });
 
 
-$(document).on('hidden.bs.modal','#categoryModal', function () {
+$(document).on('hidden.bs.modal', '#categoryModal', function () {
     $("#categoryname").val('');
     $("#categorydescription").val('');
     $("#editCategoryId").val('');
@@ -362,7 +399,7 @@ $(document).ready(function () {
                     minInput.addClass("is-invalid");
                     maxInput.addClass("is-invalid");
                     isValid = false;
-                }else {
+                } else {
                     minInput.removeClass("is-invalid");
                     maxInput.removeClass("is-invalid");
                 }
@@ -477,7 +514,7 @@ $("#editMenuItemForm").submit(function (e) {
                 minInput.addClass("is-invalid");
                 maxInput.addClass("is-invalid");
                 isValid = false;
-            }else {
+            } else {
                 minInput.removeClass("is-invalid");
                 maxInput.removeClass("is-invalid");
             }
@@ -503,6 +540,8 @@ $("#editMenuItemForm").submit(function (e) {
                 toastr.success(response.message);
                 $("#EditItemModal").modal("hide");
                 $(".modifier-group").remove();
+                selectedGroupsForItemEdit.clear();
+                $("#modifierContainerForEdit").empty();
 
                 let selectedCategoryId = $("#categoryDropdownEdit").val();
                 $(".category-item").removeClass("selected");
@@ -598,7 +637,7 @@ $("#deleteSelectedBtn").click(function () {
     $("#deleteItemsModal").modal("show");
 });
 
-$("#confirmDeleteBtnItems").click(function () {
+$(document).on("click", "#confirmDeleteBtnItems", function () {
     let itemIds = $("#deleteItemsId").val().split(",").map(Number);
 
     $.ajax({
@@ -1035,7 +1074,7 @@ $("#AddModifierForm").submit(function (event) {
 
     if (selectedValues.length === 0) {
         $("#ModifierGroupIds").addClass("is-invalid");
-        $("#ModifierGroupIdsError").text("At least one Modifier Group must be selected.");
+        $("#ModifierGroupIdsErrorAdd").text("At least one Modifier Group must be selected.");
         return;
     }
 
@@ -1094,7 +1133,7 @@ $(document).on("click", ".edit-modifier", function () {
     let modifierId = $(this).data("id");
 
     $.ajax({
-        url: '/Menu/GetModifierGroupForModal', 
+        url: '/Menu/GetModifierGroupForModal',
         type: 'GET',
         success: function (modifierGroups) {
             let dropdownHtml = `
@@ -1476,7 +1515,7 @@ function loadAllModifierssForEdit(pageNumber = 1, pageSize = 5, searchTerm = "")
 
             $(".allmodifieredit-checkbox").each(function () {
                 let modifierId = $(this).val().toString();
-                $(this).prop("checked", selectedModifiersForEdit.has(modifierId)); // Automatically check if selected
+                $(this).prop("checked", selectedModifiersForEdit.has(modifierId));
             });
         },
         error: function () {
@@ -1582,6 +1621,7 @@ $(document).ready(function () {
                 $(".modifierContainer").append(modifierGroupHtml);
                 selectedGroupsForItem.add(groupId);
                 $("#modifierGroupDropdownForItem").val("");
+                selectedGroupsForItem.clear();
             },
             error: function () {
                 alert("Failed to load modifier group.");
@@ -1677,3 +1717,15 @@ $(document).on("change", ".image-input", function () {
         fileNameDisplay.text("Selected Image: " + file.name);
     }
 });
+
+
+// on add modifier cancel btn return to modal
+
+$(document).on('click', '#addModifierCancelBtn', function () {
+    $('#addModifierGroup').modal('show');
+});
+
+
+
+/// on modal close 
+

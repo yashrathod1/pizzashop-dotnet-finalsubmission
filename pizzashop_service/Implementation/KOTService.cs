@@ -111,7 +111,7 @@ public class KOTService : IKOTService
     {
         foreach (PreparedItemViewModel? item in model.Items)
         {
-            var orderItem = await _kOTRepository.GetOrderItemAsync(model.OrderId, item.ItemId);
+            OrderItemsMapping? orderItem = await _kOTRepository.GetOrderItemAsync(model.OrderId, item.ItemId);
             if (orderItem == null) continue;
 
             int totalQty = orderItem.Quantity;
@@ -132,11 +132,11 @@ public class KOTService : IKOTService
             await _kOTRepository.UpdateOrderItemAsync(orderItem);
         }
 
-        var allItems = await _kOTRepository.GetOrderItemsByOrderIdAsync(model.OrderId);
+        List<OrderItemsMapping>? allItems = await _kOTRepository.GetOrderItemsByOrderIdAsync(model.OrderId);
         bool allPrepared = allItems.All(i => (i.Preparedquantity ?? 0) >= i.Quantity);
         if (allPrepared)
         {
-            var order = await _kOTRepository.GetOrderByIdAsync(model.OrderId);
+            Order? order = await _kOTRepository.GetOrderByIdAsync(model.OrderId);
             if (order != null)
             {
                 order.Status = "Served";

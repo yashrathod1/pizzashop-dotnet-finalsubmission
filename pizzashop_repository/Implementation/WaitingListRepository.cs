@@ -21,7 +21,7 @@ public class WaitingListRepository : IWaitingListRepository
 
     public async Task<List<WaitingToken>> GetWaitingListAsync(int? sectionId)
     {
-        var query = _context.WaitingTokens.Include(w => w.Customer).Where(w => !w.IsAssign && !w.Isdeleted);
+        IQueryable<WaitingToken>? query = _context.WaitingTokens.Include(w => w.Customer).Where(w => !w.IsAssign && !w.Isdeleted);
 
         if (sectionId.HasValue)
         {

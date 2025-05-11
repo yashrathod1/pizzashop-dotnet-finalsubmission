@@ -426,8 +426,6 @@ $(document).on('click', '#assignTableButton', function () {
             if (response.success) {
                 toastr.success(response.message);
                 $('#assignTableModal').modal('hide');
-                console.log("order id is", response.orderId)
-
                 if (response.orderId) {
                     window.location.href = '/MenuApp/Index?orderId=' + response.orderId;
                 }

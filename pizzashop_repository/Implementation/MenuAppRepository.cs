@@ -179,7 +179,7 @@ public class MenuAppRepository : IMenuAppRepository
     {
         try
         {
-            var item = await _context.MenuItems.FirstOrDefaultAsync(x => x.Id == itemId);
+            MenuItem? item = await _context.MenuItems.FirstOrDefaultAsync(x => x.Id == itemId);
             if (item != null)
             {
                 item.Quantity -= quantity;
@@ -197,7 +197,7 @@ public class MenuAppRepository : IMenuAppRepository
     {
         try
         {
-            var modifier = await _context.Modifiers.FirstOrDefaultAsync(x => x.Name == modifierName);
+            Modifier? modifier = await _context.Modifiers.FirstOrDefaultAsync(x => x.Name == modifierName);
             if (modifier != null)
             {
                 modifier.Quantity -= quantity;

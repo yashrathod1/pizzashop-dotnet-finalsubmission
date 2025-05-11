@@ -28,5 +28,5 @@ public interface ITableAndSectionService
 
     Task<bool> SoftDeleteTableAsync(int id);
 
-    void SoftDeleteTablesAsync(List<int> tableIds);
+    (bool Success, string? Message) SoftDeleteTables(List<int> tableIds);
 }

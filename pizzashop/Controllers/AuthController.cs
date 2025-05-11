@@ -89,7 +89,7 @@ public class AuthController : Controller
     }
 
     [HttpGet]
-    public IActionResult ForgotPassword(string email)
+    public IActionResult ForgotPassword(string? email)
     {
         try
         {

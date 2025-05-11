@@ -133,40 +133,7 @@ $(document).on("change", ".image-input", function () {
     }
 });
 
-// $('#FileInput').on('change', function () {
-//     const fileName = this.files[0]?.name || "";
-//     $('#addUserImageName').text(fileName);
 
-//     if (fileName) {
-//         $('#removeImage').removeClass('d-none');
-//         $('#RemoveProfileImg').val('false');
-//     }
-// });
-
-// $('#removeImage').on('click', function (e) {
-//     e.stopPropagation();
-//     $('#FileInput').val('');
-//     $('#addUserImageName').text('');
-//     $(".ProfileImagePreview").attr("src","/images/icons/cloud-arrow-up.svg");
-//     $(this).addClass('d-none');
-//     $('#RemoveProfileImg').val('true');
-// });
-
-// if ($('#addUserImageName').text().trim() !== '') {
-//     $('#removeImage').removeClass('d-none');
-// }
-
-
-// $("#FileInput").on("change", function (event) {
-//     var file = event.target.files[0];
-//     if (file) {
-//         var reader = new FileReader();
-//         reader.onload = function (e) {
-//             $(".ProfileImagePreview").attr("src", e.target.result);
-//         };
-//         reader.readAsDataURL(file);
-//     }
-// });
 
 
     // Handle file change and preview

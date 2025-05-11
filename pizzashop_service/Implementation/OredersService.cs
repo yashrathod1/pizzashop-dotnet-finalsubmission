@@ -242,9 +242,9 @@ public class OredersService : IOredersService
             ItemModifier = oi.OrderItemModifiers?.Select(m => new OrderItemModifierViewModel
             {
                 Name = m.ModifierName,
-                Quantity = m.Price,
+                Quantity = oi.Quantity,
                 Price = m.Price,
-                TotalAmount = m.Price
+                TotalAmount = m.Price * oi.Quantity
             }).ToList() ?? new List<OrderItemModifierViewModel>()
 
         }).ToList() ?? new List<OrderItemViewModel>();

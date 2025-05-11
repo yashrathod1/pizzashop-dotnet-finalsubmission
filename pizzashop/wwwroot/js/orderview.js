@@ -52,7 +52,7 @@ $("#searchOrders").on("keyup", function () {
 
 function searchOrder() {
     let searchTerm = $("#searchOrders").val().trim();
-    loadOrders(1, "Id", "asc", 5, searchTerm);
+    loadOrders(1,5, "Id", "asc", searchTerm);
 }
 
 function loadOrders(pageNumber = 1, pageSize = 5, sortby = "Id", sortOrder = "asc", searchTerm = "", status = "All", dateRange = "All time", fromDate = "", toDate = "") {

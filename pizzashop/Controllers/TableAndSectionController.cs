@@ -25,7 +25,8 @@ public class TableAndSectionController : Controller
 
         sections = sections.OrderBy(c => c.Id).ToList();
 
-        TableAndSectionViewModel? viewmodel = new TableAndSectionViewModel
+        TableAndSectionViewModel? viewmodel = new()
+
         {
             Sections = sections
         };
@@ -45,9 +46,15 @@ public class TableAndSectionController : Controller
         return PartialView("_SectionsPartial", sections);
     }
 
+    public async Task<IActionResult> GetSectionsForModal()
+    {
+        List<SectionsViewModal>? categories = await _tableAndSectionService.GetSectionsAsync();
+        return Json(categories);
+    }
+
     [HttpGet]
     public async Task<IActionResult> GetTableBySection(int SectionId = 1, int pageNumber = 1, int pageSize = 5, string searchTerm = "")
-    {    
+    {
         ViewBag.ActiveNav = "TableAndSection";
         RolePermissionViewModel? permission = await PermissionHelper.GetPermissionsAsync(HttpContext, "TableAndSection");
 
@@ -140,7 +147,7 @@ public class TableAndSectionController : Controller
             return Json(new { success = false, message = "A table with this name already exists." });
         }
 
-        bool  result = await _tableAndSectionService.AddTableAsync(model);
+        bool result = await _tableAndSectionService.AddTableAsync(model);
 
         if (result)
         {
@@ -189,6 +196,10 @@ public class TableAndSectionController : Controller
         {
             return Json(new { success = false, message = "Table not found." });
         }
+        if (existingTable.Status != "Available")
+        {
+            return Json(new { success = false, message = "Table cannot be edited unless its status is 'Available'." });
+        }
 
         if (existingTable.Name == model.Name &&
             existingTable.Capacity == model.Capacity &&
@@ -198,7 +209,7 @@ public class TableAndSectionController : Controller
             return Json(new { success = false, message = "No changes detected." });
         }
 
-        bool  result = await _tableAndSectionService.UpdateTableAsync(model);
+        bool result = await _tableAndSectionService.UpdateTableAsync(model);
 
         if (!result)
         {
@@ -216,14 +227,21 @@ public class TableAndSectionController : Controller
     }
 
 
+    [HttpPost]
     public IActionResult SoftDeleteTables([FromBody] List<int> tableIds)
     {
         if (tableIds == null || tableIds.Count == 0)
         {
-            return Json(new { success = false, message = "No item Selected" });
+            return Json(new { success = false, message = "No item selected." });
         }
 
-        _tableAndSectionService.SoftDeleteTablesAsync(tableIds);
+        var result = _tableAndSectionService.SoftDeleteTables(tableIds);
+
+        if (!result.Success)
+        {
+            return Json(new { success = false, message = result.Message });
+        }
+
         return Json(new { success = true });
     }
 

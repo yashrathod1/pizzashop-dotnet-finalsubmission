@@ -33,7 +33,7 @@ public class TableAndSectionService : ITableAndSectionService
         {
             return null;
         }
-        Section? section = new Section { Name = name, Description = description };
+        Section? section = new() { Name = name, Description = description };
 
         return await _tableAndSectionRepository.AddSectionAsync(section);
     }
@@ -41,7 +41,7 @@ public class TableAndSectionService : ITableAndSectionService
     public async Task<SectionsViewModal?> GetSectionByNameAsync(string name)
     {
         Section? section = await _tableAndSectionRepository.GetSectionByNameAsync(name);
-         return section != null ? new SectionsViewModal { Name = section.Name, Id = section.Id } : null;
+        return section != null ? new SectionsViewModal { Name = section.Name, Id = section.Id } : null;
     }
 
     public async Task<SectionsViewModal> GetSectionById(int id)
@@ -82,7 +82,7 @@ public class TableAndSectionService : ITableAndSectionService
     public async Task<TableViewModel?> GetTableByNameAsync(string name)
     {
         Table? table = await _tableAndSectionRepository.GetTableByNameAsync(name);
-        return table != null ? new TableViewModel { Name = table.Name, Id = table.Id } : null ;
+        return table != null ? new TableViewModel { Name = table.Name, Id = table.Id } : null;
     }
 
     public async Task<bool> UpdateTableAsync(TableViewModel model)
@@ -103,8 +103,23 @@ public class TableAndSectionService : ITableAndSectionService
         return await _tableAndSectionRepository.SoftDeleteTableAsync(id);
     }
 
-    public void SoftDeleteTablesAsync(List<int> tableIds)
+    public (bool Success, string? Message) SoftDeleteTables(List<int> tableIds)
     {
+        var tables = _tableAndSectionRepository.GetTablesByIds(tableIds);
+
+        var nonAvailableTables = tables
+            .Where(t => !string.Equals(t.Status, "Available", StringComparison.OrdinalIgnoreCase))
+            .Select(t => t.Name)
+            .ToList();
+
+        if (nonAvailableTables.Any())
+        {
+            string message = "Cannot delete tables that are not 'Available': " + string.Join(", ", nonAvailableTables);
+            return (false, message);
+        }
+
         _tableAndSectionRepository.SoftDeleteTablesAsync(tableIds);
+        return (true, null);
     }
+
 }

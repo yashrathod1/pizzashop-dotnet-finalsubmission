@@ -14,6 +14,8 @@ public interface IMenuRepository
 
     Task<Category?> GetCategoryByIdAsync(int id);
 
+    Task<bool> IsCategoryUsedInActiveOrdersAsync(int categoryId);
+
     Task<bool> UpdateCategoryAsync(Category category);
 
     // Task<Category?> GetCategoryByIdAsync(int id);

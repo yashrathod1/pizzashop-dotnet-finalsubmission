@@ -89,7 +89,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseStatusCodePagesWithReExecute("/Auth/AccessDenied/{0}");
+// app.UseStatusCodePagesWithReExecute("/Auth/AccessDenied/{0}");
 
 app.UseAuthorization();
 

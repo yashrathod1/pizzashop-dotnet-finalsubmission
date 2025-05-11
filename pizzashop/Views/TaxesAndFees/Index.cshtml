@@ -36,7 +36,6 @@
 </div>
 
 @* edit Tax modal *@
-
 <div class="modal fade" id="editTaxModal" tabindex="-1" aria-labelledby="editTaxModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -89,17 +88,17 @@
                                 asp-for="IsEnabled">
                             <label class="form-check-label " for="editIsEnabled">Enabled</label>
                         </div>
-                        <div class="form-check form-switch">
+                        @* <div class="form-check form-switch">
                             <input type="checkbox" class="form-check-input custom-switch" id="editIsDefault" name="IsDefault"
                                 asp-for="IsDefault">
                             <label class="form-check-label " for="editIsDefault">Default</label>
-                        </div>
+                        </div> *@
                     </div>
 
                     <!-- Modal Footer -->
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary" id="saveEditTax">Save</button>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn navbar-color text-white" id="saveEditTax">Save</button>
+                        <button type="button" class="btn cancel-btn-color" data-bs-dismiss="modal">Cancel</button>
                     </div>
                 </div>
             </form>
@@ -174,14 +173,14 @@
                             <input type="checkbox" class="form-check-input custom-switch" asp-for="IsEnabled">
                             <label class="form-check-label" asp-for="IsEnabled">IsEnabled</label>
                         </div>
-                        <div class="form-check form-switch">
+                        @* <div class="form-check form-switch">
                             <input type="checkbox" class="form-check-input custom-switch" asp-for="IsDefault">
                             <label class="form-check-label" asp-for="IsDefault">Default</label>
-                        </div>
+                        </div> *@
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary" id="saveTax">Save</button>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn  navbar-color text-white" id="saveTax">Save</button>
+                        <button type="button" class="btn cancel-btn-color" data-bs-dismiss="modal">Cancel</button>
                     </div>
             </form>
         </div>

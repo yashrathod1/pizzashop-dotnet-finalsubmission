@@ -32,5 +32,7 @@ public interface ITableAndSectionRepository
 
     Task<bool> SoftDeleteTableAsync(int id);
 
+    List<Table> GetTablesByIds(List<int> tableIds);
+
     void SoftDeleteTablesAsync(List<int> tableIds);
 }

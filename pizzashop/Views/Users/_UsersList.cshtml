@@ -49,8 +49,8 @@
                     <td>@user.Phone</td>
                     <td>@user.Rolename</td>
                     <td class="d-flex align-items-center">
-                        <span class="rounded-pill"
-                            style="background-color: @(user.Status == "Active" ? "green" : "red"); border-radius: 25%; padding: 5px; color: white;">@user.Status</span>
+                        <span class="rounded-pill p-1 text-white @(user.Status == "Active" ? "bg-success " : "bg-danger")"
+                            >@user.Status</span>
 
                     </td>
                     <td>

@@ -54,7 +54,7 @@ $("#searchCustomers").on("keyup", function () {
 
 function searchCustomers() {
     let searchTerm = $("#searchCustomers").val().trim();
-    loadCustomers(1, "Date", "desc", 5, searchTerm);
+    loadCustomers(1,5, "Date", "desc", searchTerm);
 }
 
 function loadCustomers(pageNumber = 1, pageSize = 5, sortby = "Date", sortOrder = "desc", searchTerm = "", dateRange = "All time", startDate = null, endDate = null) {
@@ -86,7 +86,7 @@ $(document).on("click", ".customerspagination-link", function (e) {
     let startDate = $("#startDate").val();
     let endDate = $("#endDate").val();
 
-    loadCustomers(pageNumber, pageSize, currentSortBy, currentSortOrder, searchTerm, dateRange,startDate,endDate);
+    loadCustomers(pageNumber, pageSize, currentSortBy, currentSortOrder, searchTerm, dateRange, startDate, endDate);
 });
 
 // Handle items per page dropdown
@@ -98,7 +98,7 @@ $(document).on("change", "#customersPerPage", function () {
     let endDate = $("#endDate").val();
 
 
-    loadCustomers(1, pageSize, currentSortBy, currentSortOrder, searchTerm, dateRange,startDate,endDate);
+    loadCustomers(1, pageSize, currentSortBy, currentSortOrder, searchTerm, dateRange, startDate, endDate);
 });
 
 
@@ -153,6 +153,14 @@ $(document).on("click", "#applyDateRange", function () {
         return;
     }
 
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+
+    if (start > end) {
+        toastr.error("Start date cannot be after end date.");
+        return;
+    }
+
     $("#dateRangeFilterCustomer").val("Custom Date");
     $("#customDateModal").modal("hide");
     applyFilters(startDate, endDate);
@@ -162,7 +170,7 @@ $(document).on("click", "#applyDateRange", function () {
 // get customer history
 // Listen for clicks on any row with class 'customer-row'
 $(document).on("click", ".customer-row", function () {
-    var customerId = $(this).data("id"); 
+    var customerId = $(this).data("id");
 
     if (!customerId) {
         alert("Invalid customer selected.");
@@ -175,7 +183,7 @@ function fetchCustomerHistory(customerId) {
     $.ajax({
         url: "/Customers/GetCustomerHistory",
         type: "GET",
-        data: { customerId: customerId},
+        data: { customerId: customerId },
         success: function (response) {
             if (response) {
                 updateCustomerHistoryModal(response);
@@ -216,11 +224,11 @@ function updateCustomerHistoryModal(data) {
 
 $(document).ready(function () {
     $("#exportBtnCustomer").click(function () {
-        var dateRange = $("#dateRangeFilterCustomer").val() || "";  
+        var dateRange = $("#dateRangeFilterCustomer").val() || "";
         var searchTerm = $("#searchCustomers").val() || "";
         let customStartDate = $("#startDate").val();
         let customEndDate = $("#endDate").val();
-    
+
 
         var url = `/Customers/ExportCustomer?dateRange=${encodeURIComponent(dateRange)}&searchTerm=${encodeURIComponent(searchTerm)}&customStartDate=${encodeURIComponent(customStartDate)}&customEndDate=${encodeURIComponent(customEndDate)}`;
 

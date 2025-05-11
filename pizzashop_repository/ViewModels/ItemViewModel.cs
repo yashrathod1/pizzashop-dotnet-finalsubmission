@@ -42,6 +42,7 @@ namespace pizzashop_repository.ViewModels
         [Column("IsdefaultTax")]
         public bool IsDefaultTax { get; set; }
 
+        [Required(ErrorMessage = "Tax Percentage is required.")]
         [Range(0, 100, ErrorMessage = "Tax Percentage must be between 0 and 100.")]
         public decimal TaxPercentage { get; set; }
 

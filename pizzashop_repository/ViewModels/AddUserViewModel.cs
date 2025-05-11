@@ -24,7 +24,7 @@ namespace pizzashop_repository.ViewModels
         [EmailAddress(ErrorMessage = "Invalid email format.")]
         public string Email { get; set; } = null!;
 
-        [Required(ErrorMessage = "password is required.")]
+        [Required(ErrorMessage = "Password is required.")]
         [RegularExpression(@"^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$",
             ErrorMessage = "Password must be at least 8 characters, include uppercase, lowercase, a number, and a special character.")]
         public string Password { get; set; } = null!;

@@ -57,7 +57,7 @@
                             <div style="width: 100px; height: 40px"
                                 class="count border border-secondary d-flex justify-content-between align-items-center px-2 rounded">
                                 <div class="cursor-pointer negative" style="cursor: pointer;">−</div>
-                                <div class="value quantity-input">1</div>
+                                <div class="value quantity-input">@item.ItemQuantity</div>
                                 <div class="cursor-pointer positive" style="cursor: pointer;">+</div>
                             </div>
                         </td>
@@ -65,7 +65,7 @@
                         <td class="text-center align-middle">
                             <div class="d-flex flex-column">
                                 <span class="fs-4 text-dark item-amount"
-                                    data-base-amount="@item.ItemAmount">₹@item.ItemAmount</span>
+                                    data-base-amount="@item.ItemAmount">₹@(@item.ItemAmount * @item.ItemQuantity) </span>
                                 <span class="text-secondary fs-6 totalmodifier-amount"
                                     data-base-amount="@item.TotalModifierAmount">₹@item.TotalModifierAmount</span>
                             </div>

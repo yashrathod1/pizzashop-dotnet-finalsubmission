@@ -33,19 +33,16 @@
                 </td>
                 <td> @table.Name</td>
                 <td>@table.Capacity</td>
-                <td> <span class="rounded-pill"
-                        style="background-color: @(table.Status == "Available" ? "gray" : "gray"); border-radius: 25%; padding: 5px; color: white;">@table.Status</span>
+                <td> <span class="rounded-pill p-1 text-white @(table.Status == "Available" ? "bg-success " : "bg-secondary")">@table.Status</span>
                 </td>
                 <td>
                     @if (perms?.CanaddEdit == true)
                     {
-                        <button class="edit-table table-edit-btn" data-id="@table.Id" data-bs-toggle="modal"
-                            data-bs-target="#EditItemModal"><img src="~/images/icons/pen.svg"></button>
+                        <button class="edit-table table-edit-btn" data-id="@table.Id"><img src="~/images/icons/pen.svg"></button>
                     }
                     @if (perms?.Candelete == true)
                     {
-                        <button class="delete-table table-delete-btn" data-id="@table.Id" data-bs-toggle="modal"
-                            data-bs-target="#deleteItemModal"><img src="~/images/icons/trash.svg"></button>
+                        <button class="delete-table table-delete-btn" data-id="@table.Id"><img src="~/images/icons/trash.svg"></button>
                     }
                 </td>
             </tr>

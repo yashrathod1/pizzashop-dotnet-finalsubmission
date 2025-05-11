@@ -88,15 +88,43 @@ $(document).on("change", "#tablesPerPage", function () {
 });
 
 
-// @* addsection *@
 
+// section dropdown
+$(document).on('click', '#newTableBtn', function () {
+    let sectionId = $(".section-item.selected").data("id");
+    loadSectionsInModal('sectionDropdown', sectionId);
+});
+
+function loadSectionsInModal(dropdownId, selectedId = null) {
+    $.ajax({
+        url: '/TableAndSection/GetSectionsForModal',
+        type: 'GET',
+        success: function (data) {
+            let dropdown = $('#' + dropdownId);
+            dropdown.empty();
+            dropdown.append('<option value="" disabled selected>Select Section</option>');
+            $.each(data, function (index, section) {
+                const option = $('<option></option>').val(section.id).text(section.name);
+                if (selectedId && section.id == selectedId) {
+                    option.attr('selected', 'selected');
+                }
+                dropdown.append(option);
+            });
+        },
+        error: function () {
+            toastr.error('Failed to load sections');
+        }
+    });
+}
+
+// @* addsection *@
 $("#addSectionForm").submit(function (e) {
     e.preventDefault();
 
     if (!$(this).valid()) {
         return;
     }
-    
+
     let sectionData = {
         name: $("#sectionname").val(),
         description: $("#sectiondescription").val()
@@ -113,7 +141,7 @@ $("#addSectionForm").submit(function (e) {
                 toastr.success(response.message);
                 $("#addSectionModal").modal("hide");
                 loadSections();
-                $("#addSectionForm")[0].reset();    
+                $("#addSectionForm")[0].reset();
             } else {
                 toastr.error(response.message);
             }
@@ -194,11 +222,10 @@ $(document).on("click", ".delete-section", function () {
 $("#confirmDeleteBtnSection").click(function () {
     let sectionId = $(this).data("section-id");
     deleteSection(sectionId);
-    $("#deleteSectionModal").modal("hide");
 });
 
-function deleteSection(sectionId) {
 
+function deleteSection(sectionId) {
     $.ajax({
         url: "/TableAndSection/DeleteSections",
         type: "POST",
@@ -208,9 +235,10 @@ function deleteSection(sectionId) {
         success: function (response) {
             if (response.success) {
                 toastr.success("Section deleted successfully");
+                $("#deleteSectionModal").modal("hide");
                 loadSections();
             } else {
-                toastr.error("Failed to delete Section");
+                toastr.error("Cannot delete section: One or more tables are not 'Available'");
             }
         },
         error: function () {
@@ -226,7 +254,7 @@ $(document).ready(function () {
     $("#addTableForm").submit(function (e) {
         e.preventDefault();
 
-        
+
         let isValid = $(this).validate().form();
         if (!isValid) {
             return;
@@ -234,7 +262,7 @@ $(document).ready(function () {
 
         var formData = new FormData(this);
 
-        formData.append("Name", $("input[name='Table.Name']").val()); 
+        formData.append("Name", $("input[name='Table.Name']").val());
         formData.append("SectionId", $("select[name='Table.SectionId']").val());
         formData.append("Capacity", $("input[name='Table.Capacity']").val());
         formData.append("Status", $("select[name='Table.Status']").val());
@@ -243,8 +271,8 @@ $(document).ready(function () {
             url: '/TableAndSection/AddTable',
             type: 'POST',
             data: formData,
-            processData: false, 
-            contentType: false, 
+            processData: false,
+            contentType: false,
             success: function (response) {
                 if (response.success) {
                     toastr.success(response.message);
@@ -286,6 +314,7 @@ $(document).on("click", ".edit-table", function () {
             $("#tableId1").val(table.id);
 
             if ($("#editTableModal").length > 0) {
+                loadSectionsInModal('editSectionDropdown', table.sectionId);
                 $("#editTableModal").modal('show');
             } else {
                 toastr.error("Modal not found in the DOM!");
@@ -304,7 +333,7 @@ $("#editTableForm").submit(function (e) {
     let tableData = {
         Id: $("#tableId1").val(),
         Name: $("#Name1").val(),
-        SectionId: $("#SectionId2").val(),
+        SectionId: $("#editSectionDropdown").val(),
         Capacity: $("#Capacity1").val(),
         Status: $("#Status1").val()
     };
@@ -315,16 +344,16 @@ $("#editTableForm").submit(function (e) {
         contentType: "application/json",
         data: JSON.stringify(tableData),
         success: function (response) {
-            if(response.success){
+            if (response.success) {
                 toastr.success(response.message);
                 $("#editTableModal").modal('hide');
                 let currentSectionId = $(".section-item.selected").data("id");
                 let pageSize = $("#tablesPerPage").val();
                 let pageNumber = $(".tablepagination-link.active").data("page");
-    
+
                 loadTables(currentSectionId, pageNumber, pageSize);
 
-            }else{
+            } else {
                 toastr.error(response.message);
             }
         },
@@ -344,7 +373,6 @@ $(document).on("click", ".delete-table", function () {
 $("#confirmDeleteBtnTable").click(function () {
     var tableId = $(this).data("id");
     deleteTable(tableId);
-    $("#deleteTableModal").modal("hide");
 });
 
 function deleteTable(tableId) {
@@ -357,13 +385,14 @@ function deleteTable(tableId) {
         success: function (response) {
             if (response.success) {
                 toastr.success("Table deleted successfully");
+                $("#deleteTableModal").modal("hide");
                 let currentSectionId = $(".section-item.selected").data("id");
                 let pageSize = $("#tablesPerPage").val();
                 let pageNumber = $(".tablepagination-link.active").data("page");
-    
+
                 loadTables(currentSectionId, pageNumber, pageSize);
             } else {
-                toastr.error("Failed to delete Item");
+                toastr.error("Table cannot be deleted. Wait until it's Available.");
             }
         },
         error: function () {
@@ -371,6 +400,7 @@ function deleteTable(tableId) {
         }
     });
 }
+
 
 // for masstable delete
 
@@ -384,7 +414,7 @@ $("#deleteSelectedBtnForTables").click(function () {
         toastr.warning("Please select at least one item.");
         return;
     }
-   
+
     $("#deleteTablesId").val(selectedIds.join(","));
     $("#deleteTablesModal").modal("show");
 });
@@ -392,7 +422,7 @@ $("#deleteSelectedBtnForTables").click(function () {
 
 $("#confirmDeleteBtnTables").click(function () {
     let tableIds = $("#deleteTablesId").val().split(",").map(Number);
-   
+
     $.ajax({
         url: '/TableAndSection/SoftDeleteTables',
         type: 'POST',
@@ -405,12 +435,12 @@ $("#confirmDeleteBtnTables").click(function () {
                 let currentSectionId = $(".section-item.selected").data("id");
                 let pageSize = $("#tablesPerPage").val();
                 let pageNumber = $(".tablepagination-link.active").data("page");
-    
+
                 loadTables(currentSectionId, pageNumber, pageSize);
             } else {
-                toastr.error("Failed to Delete Tables");
+                 toastr.error(response.message);
             }
         }
     });
-    
+
 });

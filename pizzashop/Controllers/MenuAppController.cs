@@ -19,7 +19,7 @@ public class MenuAppController : Controller
     {
         ViewBag.orderId = orderId;
         ViewBag.ActiveNav = "Menu";
-        var orderdetails = await _menuAppService.GetCategoriesAsync();
+        MenuAppViewModel? orderdetails = await _menuAppService.GetCategoriesAsync();
         return View(orderdetails);
     }
 
@@ -49,7 +49,7 @@ public class MenuAppController : Controller
     [HttpGet]
     public async Task<IActionResult> GetModifierInItemCard(int id)
     {
-        var modifier = await _menuAppService.GetModifierInItemCardAsync(id);
+        MenuAppModifierDetailViewModel? modifier = await _menuAppService.GetModifierInItemCardAsync(id);
         return PartialView("_ModifierItemPartial", modifier);
     }
 
@@ -58,7 +58,7 @@ public class MenuAppController : Controller
     {
         try
         {
-            var result = await _menuAppService.GetTableDetailsByOrderIdAsync(orderId);
+            MenuAppTableSectionViewModel? result = await _menuAppService.GetTableDetailsByOrderIdAsync(orderId);
             return Json(new
             {
                 floorName = result.SectionName,
@@ -76,7 +76,7 @@ public class MenuAppController : Controller
     {
         try
         {
-            var model = await _menuAppService.AddItemInOrder(ItemId, ModifierIds);
+            MenuAppAddOrderItemViewModel? model = await _menuAppService.AddItemInOrder(ItemId, ModifierIds);
             return PartialView("_MenuAppItemPartial", model);
         }
         catch (Exception ex)
@@ -88,7 +88,7 @@ public class MenuAppController : Controller
     [HttpGet]
     public async Task<IActionResult> GetOrderDetails(int orderId)
     {
-        var orderdetails = await _menuAppService.GetOrderDetailsAsync(orderId);
+        MenuAppOrderDetailsViewModel? orderdetails = await _menuAppService.GetOrderDetailsAsync(orderId);
         return PartialView("_OrderDetailsPartial", orderdetails);
     }
 
@@ -123,7 +123,7 @@ public class MenuAppController : Controller
     {
         try
         {
-            var customer = await _menuAppService.GetCustomerDetailsByOrderId(orderId);
+            MenuAppCustomerViewModel? customer = await _menuAppService.GetCustomerDetailsByOrderId(orderId);
             return Json(customer);
         }
         catch (Exception ex)
@@ -140,7 +140,7 @@ public class MenuAppController : Controller
             return Json(new { success = false, message = "Invalid data." });
         }
 
-        var result = await _menuAppService.UpdateCustomerDetailsAsync(model);
+        bool result = await _menuAppService.UpdateCustomerDetailsAsync(model);
 
         if (result)
         {
@@ -157,7 +157,7 @@ public class MenuAppController : Controller
     {
         try
         {
-            var order = await _menuAppService.GetOrderCommentById(orderId);
+            MenuAppOrderViewModel? order = await _menuAppService.GetOrderCommentById(orderId);
             return Json(order);
         }
         catch (Exception ex)
@@ -171,7 +171,7 @@ public class MenuAppController : Controller
     {
         try
         {
-            var orderItem = await _menuAppService.GetItemInstructionById(orderItemId, orderId);
+            MenuAppItemInstructionViewModel? orderItem = await _menuAppService.GetItemInstructionById(orderItemId, orderId);
             return Json(orderItem);
         }
         catch (Exception ex)
@@ -185,7 +185,7 @@ public class MenuAppController : Controller
     {
         try
         {
-            var result = await _menuAppService.UpdateInstruction(model);
+            bool result = await _menuAppService.UpdateInstruction(model);
             if (result)
             {
                 return Json(new { success = true, message = "Item Instruction Added successfully." });
@@ -206,7 +206,7 @@ public class MenuAppController : Controller
     {
         try
         {
-            var result = await _menuAppService.UpdateOrderComment(model);
+            bool result = await _menuAppService.UpdateOrderComment(model);
             if (result)
             {
                 return Json(new { success = true, message = "Order Comment Edited successfully." });
@@ -239,7 +239,7 @@ public class MenuAppController : Controller
     [HttpGet]
     public async Task<IActionResult> GetOrderStatus(int orderId)
     {
-        var result = await _menuAppService.GetOrderStatusAsync(orderId);
+        MenuAppOrderViewModel? result = await _menuAppService.GetOrderStatusAsync(orderId);
         return Json(result);
     }
 
@@ -249,7 +249,7 @@ public class MenuAppController : Controller
     {
         try
         {
-            var isSaved = await _menuAppService.AddFeedbackAsync(model);
+            bool isSaved = await _menuAppService.AddFeedbackAsync(model);
             if (isSaved)
             {
                 return Json(new { success = true });

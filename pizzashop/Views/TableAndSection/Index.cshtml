@@ -28,12 +28,12 @@
                         <div>
                             @if (perms?.CanaddEdit == true)
                             {
-                            <div class="ms-1">
-                                <button type="button" class="trash-btn fw-bold  blue-color custom-blue-border" data-bs-toggle="modal"
-                                    data-bs-target="#addSectionModal">
-                                    <img src="~/images/icons/plus-lg.svg">
-                                </button>
-                            </div>
+                                <div class="ms-1">
+                                    <button type="button" class="trash-btn fw-bold  blue-color custom-blue-border"
+                                        data-bs-toggle="modal" data-bs-target="#addSectionModal">
+                                        <img src="~/images/icons/plus-lg.svg">
+                                    </button>
+                                </div>
                             }
                         </div>
                     </div>
@@ -51,15 +51,16 @@
                     </div>
                     @if (perms?.Candelete == true)
                     {
-                    <div class="ms-4 mt-1"><button id="deleteSelectedBtnForTables" class="table-deletes-btn"><img src="~/images/icons/trash.svg" alt=""></button>
-                    </div>
+                        <div class="ms-4 mt-1"><button id="deleteSelectedBtnForTables" class="table-deletes-btn"><img
+                                    src="~/images/icons/trash.svg" alt=""></button>
+                        </div>
                     }
                     @if (perms?.CanaddEdit == true)
                     {
-                    <div class="ms-4"><button type="button" data-bs-toggle="modal" data-bs-target="#addTableModal"
-                            class="btn menu-new-item-btn text-white">+New
-                            Table</button>
-                    </div>
+                        <div class="ms-4"><button type="button" data-bs-toggle="modal" data-bs-target="#addTableModal"
+                                class="btn menu-new-item-btn text-white" id="newTableBtn">+New
+                                Table</button>
+                        </div>
                     }
                 </div>
                 <div>
@@ -78,7 +79,6 @@
 
 
 @* addsection modal *@
-
 <div class="modal fade" id="addSectionModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -110,7 +110,6 @@
 </div>
 
 @* editsection modal *@
-
 <div class="modal fade" id="editSectionModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -143,7 +142,6 @@
 
 
 @* delete section modal *@
-
 <div class="modal fade" id="deleteSectionModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -161,7 +159,6 @@
 
 
 @* add table modal *@
-
 <div class="modal fade" id="addTableModal" tabindex="-1" aria-labelledby="addTableModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -177,15 +174,11 @@
                             </div>
                         </div>
 
-                        <!-- Section Dropdown -->
                         <div class="col-md-6">
                             <div class="form-floating">
-                                <select asp-for="Table.SectionId" class="form-select">
-                                    <option value="">Select Section</option>
-                                    @foreach (var sections in Model.Sections)
-                                    {
-                                        <option value="@sections.Id">@sections.Name</option>
-                                    }
+                                <select id="sectionDropdown" class="form-select" asp-for="Table.SectionId"
+                                    aria-label="Select Section" disabled>
+                                    <option value="" selected></option> <!-- Needed for floating label -->
                                 </select>
                                 <label asp-for="Table.SectionId">Section*</label>
                                 <span asp-validation-for="Table.SectionId" class="text-danger"></span>
@@ -204,10 +197,10 @@
                         <!-- Status Dropdown -->
                         <div class="col-md-6">
                             <div class="form-floating">
-                                <select asp-for="Table.Status" class="form-select">
+                                <select asp-for="Table.Status" class="form-select" disabled>
                                     <option value="Available" selected>Available</option>
                                     <option value="Occupied">Occupied</option>
-                                      <option value="Assigned">Assigned</option>
+                                    <option value="Assigned">Assigned</option>
                                 </select>
                                 <label asp-for="Table.Status">Status*</label>
                             </div>
@@ -227,7 +220,6 @@
 
 
 @* edittable modal *@
-
 <div class="modal fade" id="editTableModal" tabindex="-1" aria-labelledby="editTableModalLabel">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -254,17 +246,16 @@
                         <!-- Section Dropdown -->
                         <div class="col-md-6">
                             <div class="form-floating">
-                                <select asp-for="Table.SectionId" class="form-select" id="SectionId2">
-                                    <option value="" selected>Select Section</option>
-                                    @foreach (var sections in Model.Sections)
-                                    {
-                                        <option value="@sections.Id">@sections.Name</option>
-                                    }
+                                <select asp-for="Table.SectionId" class="form-select" id="editSectionDropdown" disabled>
+                                    <option value="" selected></option> <!-- Required for floating label -->
                                 </select>
                                 <label asp-for="Table.SectionId">Section*</label>
                                 <span asp-validation-for="Table.SectionId" class="text-danger"></span>
                             </div>
                         </div>
+
+                
+
 
                         <!-- Capacity Input -->
                         <div class="col-md-6">
@@ -279,7 +270,7 @@
                         <!-- Status Dropdown -->
                         <div class="col-md-6">
                             <div class="form-floating">
-                                <select asp-for="Table.Status" class="form-select" id="Status1">
+                                <select asp-for="Table.Status" class="form-select" id="Status1" disabled>
                                     <option value="">Select Status</option>
                                     <option value="Available">Available</option>
                                     <option value="Occupied">Occupied</option>
@@ -320,7 +311,6 @@
 </div>
 
 @* delete Tables modal *@
-
 <div class="modal fade" id="deleteTablesModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">

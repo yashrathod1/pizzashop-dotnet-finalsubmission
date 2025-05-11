@@ -16,10 +16,11 @@ public class TableService : ITableService
 
     public async Task<TablesOrderAppViewModel> GetSectionsWithTablesAsync()
     {
-        var sections = await _tableRepository.GetSections();
-        var tables = await _tableRepository.GetTables();
+        List<Section>? sections = await _tableRepository.GetSections();
+        List<Table>?  tables = await _tableRepository.GetTables();
 
-        var viewModel = new TablesOrderAppViewModel
+        TablesOrderAppViewModel? viewModel = new()
+
         {
             Sections = sections.Select(s => new OrderAppSectionViewModel
             {
@@ -47,7 +48,7 @@ public class TableService : ITableService
 
     public async Task<List<OrderAppSectionViewModel>> GetAllSectionsAsync()
     {
-        var sections = await _tableRepository.GetSections();
+        List<Section>? sections = await _tableRepository.GetSections();
 
         return sections.Select(s => new OrderAppSectionViewModel
         {
@@ -58,7 +59,7 @@ public class TableService : ITableService
 
     public async Task<bool> AddWaitingTokenAsync(WaitingTokenViewModel waitingTokenVm)
     {
-        var existingCustomer = await _tableRepository.GetCustomerByEmailOrMobileAsync(waitingTokenVm.Email, waitingTokenVm.MobileNo);
+        Customer? existingCustomer = await _tableRepository.GetCustomerByEmailOrMobileAsync(waitingTokenVm.Email, waitingTokenVm.MobileNo);
 
         Customer customer;
 
@@ -68,7 +69,8 @@ public class TableService : ITableService
             {
                 Name = waitingTokenVm.Name,
                 Email = waitingTokenVm.Email,
-                PhoneNumber = waitingTokenVm.MobileNo
+                PhoneNumber = waitingTokenVm.MobileNo,
+                NoOfPerson = waitingTokenVm.NoOfPerson
             };
 
             await _tableRepository.AddCustomer(customer);
@@ -76,29 +78,29 @@ public class TableService : ITableService
         else
         {
             customer = existingCustomer;
-            var existingToken = await _tableRepository.GetWaitingTokenByCustomerId(customer.Id);
+            WaitingToken? existingToken = await _tableRepository.GetWaitingTokenByCustomerId(customer.Id);
             if (existingToken != null)
             {
                 return false;
             }
         }
 
-        var waitingToken = new WaitingToken
+        WaitingToken? waitingToken = new WaitingToken
         {
             CustomerId = customer.Id,
             NoOfPersons = waitingTokenVm.NoOfPerson,
             SectionId = waitingTokenVm.SectionId
         };
 
-        var result = await _tableRepository.AddWaitingToken(waitingToken);
+        bool result = await _tableRepository.AddWaitingToken(waitingToken);
 
         return result;
     }
 
     public async Task<List<WaitingTokenViewModel>> GetWaitingTokens(int sectionId)
     {
-        var tokens = await _tableRepository.GetWaitingTokens(sectionId);
-        var waitingTokens = tokens.Select(t => new WaitingTokenViewModel
+        List<WaitingToken>? tokens = await _tableRepository.GetWaitingTokens(sectionId);
+        List<WaitingTokenViewModel>? waitingTokens = tokens.Select(t => new WaitingTokenViewModel
         {
             Id = t.Id,
             Name = t.Customer.Name,
@@ -112,7 +114,7 @@ public class TableService : ITableService
     {
         try
         {
-            var token = await _tableRepository.GetTokenById(tokenId);
+            WaitingToken? token = await _tableRepository.GetTokenById(tokenId);
             if (token == null) return null;
 
             return new WaitingTokenViewModel
@@ -138,7 +140,8 @@ public class TableService : ITableService
             Customer? customer = await _tableRepository.GetCustomerByEmail(email);
             if (customer == null) return null;
 
-            var viewModel = new CustomerViewModel
+            CustomerViewModel? viewModel = new()
+
             {
                 Id = customer.Id,
                 Email = customer.Email,
@@ -156,7 +159,7 @@ public class TableService : ITableService
 
     public async Task<(bool IsSuccess, string Message)> AssignTablesAsync(AssignTableRequestViewModel model)
     {
-        var selectedTables = await _tableRepository.GetTablesByIdsAsync(model.SelectedTables);
+        List<Table>? selectedTables = await _tableRepository.GetTablesByIdsAsync(model.SelectedTables);
         int totalCapacity = selectedTables.Sum(t => t.Capacity);
         if (model.NumberOfPersons > totalCapacity)
         {
@@ -164,19 +167,19 @@ public class TableService : ITableService
 
         }
 
-        var customer = await _tableRepository.GetCustomerByEmail(model.Customer.Email);
+        Customer? customer = await _tableRepository.GetCustomerByEmail(model.Customer.Email);
 
         if (customer != null)
         {
-            var existingCustomer = await _tableRepository.GetCustomerFromWaitingList(customer.Id);
+            WaitingToken? existingCustomer = await _tableRepository.GetCustomerFromWaitingList(customer.Id);
             if (existingCustomer != null)
-            {
+            {   
                 existingCustomer.IsAssign = true;
                 existingCustomer.Updatedat = DateTime.Now;
             }
 
 
-            var existingRunningOrder = await _tableRepository.GetRunningOrderByCustomerIdAsync(customer.Id);
+            Order? existingRunningOrder = await _tableRepository.GetRunningOrderByCustomerIdAsync(customer.Id);
             if (existingRunningOrder != null)
             {
                 return (false, "This customer has a running order.");
@@ -186,6 +189,7 @@ public class TableService : ITableService
             {
                 customer.Name = model.Customer.Name;
                 customer.PhoneNumber = model.Customer.MobileNo;
+                customer.NoOfPerson = model.NumberOfPersons;
                 await _tableRepository.UpdateCustomerAsync(customer);
             }
         }
@@ -195,12 +199,13 @@ public class TableService : ITableService
             {
                 Name = model.Customer.Name,
                 Email = model.Customer.Email,
-                PhoneNumber = model.Customer.MobileNo
+                PhoneNumber = model.Customer.MobileNo,
+                NoOfPerson = model.NumberOfPersons
             };
             await _tableRepository.CreateCustomerAsync(customer);
         }
 
-        var order = new Order
+        Order? order = new Order
         {
             Customerid = customer.Id,
             Status = "Pending",
@@ -209,10 +214,11 @@ public class TableService : ITableService
 
         await _tableRepository.CreateOrderAsync(order);
 
-        var taxes = await _tableRepository.GetTaxesandfeesAsync();
-        foreach (var tax in taxes)
+        List<Taxesandfee>? taxes = await _tableRepository.GetTaxesandfeesAsync();
+        foreach (Taxesandfee? tax in taxes)
         {
-            var ordertax = new OrderTaxesMapping
+            OrderTaxesMapping? ordertax = new()
+
             {
                 OrderId = order.Id,
                 TaxId = tax.Id,
@@ -226,7 +232,7 @@ public class TableService : ITableService
 
         int remainingPersons = model.NumberOfPersons;
 
-        foreach (var table in selectedTables)
+        foreach (Table? table in selectedTables)
         {
             int personsForTable = Math.Min(remainingPersons, table.Capacity);
 
@@ -255,8 +261,6 @@ public class TableService : ITableService
     {
         return await _tableRepository.GetOrderIdByTableIdAsync(tableId);
     }
-
-
 
 }
 

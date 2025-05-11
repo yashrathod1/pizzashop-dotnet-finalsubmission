@@ -89,6 +89,16 @@ public class MenuRepository : IMenuRepository
         }
     }
 
+    public async Task<bool> IsCategoryUsedInActiveOrdersAsync(int categoryId)
+    {
+        return await _context.OrderItemsMappings
+            .Include(oi => oi.Menuitem)
+            .ThenInclude(i => i.Category)
+            .AnyAsync(oi =>
+                oi.Menuitem.Categoryid == categoryId &&
+                oi.Order.Status == "In Progress");
+    }
+
     public async Task<bool> UpdateCategoryAsync(Category category)
     {
         try

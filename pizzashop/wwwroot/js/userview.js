@@ -46,8 +46,7 @@ $("#searchUsers").on("keyup", function () {
 
 function searchUsers() {
     let searchTerm = $("#searchUsers").val().trim();
-    loadUsers(1, "Id", "asc", 5, searchTerm);
-
+    loadUsers(1, 5, "Id", "asc", searchTerm);
 }
 
 function loadUsers(pageNumber = 1, pageSize = 5, sortby = "Name", sortOrder = "asc", searchTerm = "") {

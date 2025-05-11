@@ -149,6 +149,10 @@ public class MenuService : IMenuService
             Category? category = await _menuRepository.GetCategoryByIdAsync(id);
             if (category == null) return false;
 
+            bool isUsedInActiveOrder = await _menuRepository.IsCategoryUsedInActiveOrdersAsync(id);
+            if (isUsedInActiveOrder)
+                return false;
+
             category.Isdeleted = true;
             return await _menuRepository.SoftDeleteCategoryAsync(category);
         }
@@ -157,39 +161,6 @@ public class MenuService : IMenuService
             throw new Exception("An error occurred in the service layer while soft deleting the category.", ex);
         }
     }
-
-
-    // public async Task<List<ItemViewModel>> GetItemsByCategoryAsync(int categoryId)
-    // {
-    //     try
-    //     {
-    //         var menuItems = await _menuRepository.GetItemsByCategoryAsync(categoryId);
-
-    //         var itemViewModels = menuItems.Select(i => new ItemViewModel
-    //         {
-    //             Id = i.Id,
-    //             Name = i.Name,
-    //             Rate = i.Rate,
-    //             Quantity = i.Quantity,
-    //             IsAvailable = i.IsAvailable,
-    //             ItemType = i.Type,
-    //             ItemImagePath = i.ItemImage,
-    //             Description = i.Description,
-    //             ShortCode = i.ShortCode,
-    //             IsDefaultTax = i.IsdefaultTax,
-    //             Categoryid = i.Categoryid,
-    //             Unit = i.UnitType,
-    //             TaxPercentage = i.TaxPercentage,
-    //         }).ToList();
-
-    //         return itemViewModels;
-    //     }
-    //     catch (Exception ex)
-    //     {
-    //         throw new Exception("An error occurred in the service layer while fetching items by category.", ex);
-    //     }
-    // }
-
 
     public async Task<PagedResult<ItemViewModel>> GetItemsByCategoryAsync(int categoryId, int pageNumber, int pageSize, string searchTerm = "")
     {
@@ -446,7 +417,7 @@ public class MenuService : IMenuService
                             Name = mgm.Modifier.Name,
                             Price = mgm.Modifier.Price
                         }).ToList(),
-                     ModifierCount = m.ModifierGroup.Modifiergroupmodifiers.Count(mgm => !mgm.Isdeleted && !mgm.Modifier.Isdeleted)
+                    ModifierCount = m.ModifierGroup.Modifiergroupmodifiers.Count(mgm => !mgm.Isdeleted && !mgm.Modifier.Isdeleted)
                 }).ToList();
 
             ItemViewModel itemViewModel = new ItemViewModel

@@ -8,6 +8,7 @@ namespace pizzashop_repository.ViewModels
 
         [Required(ErrorMessage = "Section is required")]
         [Range(1, int.MaxValue, ErrorMessage = "Please select a valid section")]
+        
         public int SectionId { get; set; }
 
         [Required(ErrorMessage = "Table name is required")]

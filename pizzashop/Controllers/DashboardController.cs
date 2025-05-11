@@ -13,13 +13,18 @@ public class DashboardController : Controller
         _useService = userService;
     }
 
-
-    [HttpGet]
-    public async Task<IActionResult> Index(string filter = "Current Month")
+    public async Task<IActionResult> Index(string filter, DateTime? startDate, DateTime? endDate)
     {   
         ViewBag.ActiveNav = "Dashboard";
-        var model = await _useService.GetDashboardDataAsync(filter);
-        return View(model);
+        var dashboardData = await _useService.GetDashboardDataAsync(filter, startDate, endDate);
+        return View(dashboardData);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetDashboardData(string filter, DateTime? startDate, DateTime? endDate)
+    {
+        var dashboardData = await _useService.GetDashboardDataAsync(filter, startDate, endDate);
+        return Json(dashboardData);
     }
 
     [HttpGet]
@@ -35,7 +40,7 @@ public class DashboardController : Controller
                 return RedirectToAction("Login", "Login");
             }
 
-            UserTableViewModel? model = _useService.GetUserProfile(email);
+            ProfileViewModel? model = _useService.GetUserProfile(email);
 
             if (model == null)
             {
@@ -54,7 +59,7 @@ public class DashboardController : Controller
 
 
     [HttpPost]
-    public IActionResult Profile(UserTableViewModel model)
+    public IActionResult Profile(ProfileViewModel model)
     {
         try
         {
@@ -68,7 +73,8 @@ public class DashboardController : Controller
 
             bool success = _useService.UpdateUserProfile(email, model);
 
-            CookieOptions? coockieopt = new CookieOptions
+            CookieOptions? coockieopt = new()
+
             {
                 HttpOnly = true,
                 Secure = true,
@@ -86,10 +92,10 @@ public class DashboardController : Controller
             TempData["success"] = "Profile updated successfully.";
             return View(model);
         }
-        catch (Exception ex)
+        catch
         {
             TempData["error"] = "An error occurred while updating the profile.";
-            return RedirectToAction("Profile");
+            return RedirectToAction("Profile", "Dashboard");
 
         }
     }
@@ -129,7 +135,7 @@ public class DashboardController : Controller
             }
 
             TempData["success"] = "Password updated successfully.";
-            return RedirectToAction("Login", "Login");
+            return RedirectToAction("Login", "Auth");
         }
         catch (Exception)
         {
@@ -151,8 +157,4 @@ public class DashboardController : Controller
         }
         return RedirectToAction("Login", "Auth");
     }
-
-
-
-
 }
